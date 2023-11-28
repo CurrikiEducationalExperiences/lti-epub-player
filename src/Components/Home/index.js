@@ -102,7 +102,7 @@ const api = [
       },
       {
         img: Book,
-        id: '699cded0-889f-11ee-a457-5b6863f723b1',
+        id: '699cded0-889f-11ee-a457-5b6863f723b2',
         title: 'Chapter 2: What Are Medical Ethics?',
         description: 'Chapter 2: What Are Medical Ethics?',
         licenseemail: 'antonioetayo@gmail.com',
@@ -180,9 +180,69 @@ const api = [
       },
       {
         img: Book,
-        id: '699cded0-889f-11ee-a457-5b6863f723b1',
+        id: '699cded0-889f-11ee-a457-5b6863f723b3',
         title: 'Chapter 3: What Are Medical Ethics?',
         description: 'Chapter 3: What Are Medical Ethics?',
+        licenseemail: 'antonioetayo@gmail.com',
+        breadcrumb: {
+          id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/BreadcrumbList',
+          type: 'sdons:BreadcrumbList',
+          itemListElement: [
+            {
+              item: {
+                id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/ListItem/aetest',
+                name: 'aetest',
+              },
+              unit: [
+                {
+                  id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/ChapterItem/aetest',
+                  name: 'unit aetest',
+                },
+              ],
+              chapter: {
+                name: 'Chapter aetest',
+              },
+              type: 'sdons:ListItem',
+              position: 0,
+            },
+            {
+              item: {
+                id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/ListItem/Medical-Ethics-For-Dummies',
+                name: 'Medical Ethics For Dummies',
+              },
+              type: 'sdons:ListItem',
+              position: 1,
+            },
+            {
+              item: {
+                id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/ListItem/Part-I:-Medical-Ethics,-or-Doing-the-Right-Thing',
+                name: 'Part I: Medical Ethics, or Doing the Right Thing',
+              },
+              type: 'sdons:ListItem',
+              position: 2,
+            },
+          ],
+        },
+        author: {
+          id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/author/id/mike@curriki.org',
+          url: '',
+          name: 'Mike Francis',
+          type: 'sdons:Person',
+          email: 'mike@curriki.org',
+        },
+        metadata: {
+          id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/metadata/general',
+          type: 'sdons:Dataset',
+          title: 'Chapter 1: What Are Medical Ethics?',
+          keywords: ['Education', 'Curriculum', 'Curriki', 'EPUB'],
+          description: 'Chapter 1: What Are Medical Ethics?',
+        },
+      },
+      {
+        img: Book,
+        id: '699cded0-889f-11ee-a457-5b6863f723b4',
+        title: 'Chapter 4: What Are Medical Ethics?',
+        description: 'Chapter 4: What Are Medical Ethics?',
         licenseemail: 'antonioetayo@gmail.com',
         breadcrumb: {
           id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/BreadcrumbList',
@@ -251,6 +311,23 @@ const Index = () => {
   const [startSearching, setStartSearching] = useState('')
   console.log('setStartSearching', startSearching)
 
+  // handle buttons
+  const [visibleItems, setVisibleItems] = useState(4)
+
+  const handleSeeMoreLess = () => {
+    // Toggle the visibility of the "See More" button
+    setVisibleItems((prevVisibleItems) => {
+      const newVisibleItems = prevVisibleItems + 4
+
+      // If all items are visible, hide the "See More" button
+      if (newVisibleItems >= filteredData.length) {
+        return filteredData.length
+      }
+
+      // Otherwise, show the "See More" button
+      return newVisibleItems
+    })
+  }
   // search data
   const [searchContent, setSearchContent] = useState([])
 
@@ -268,7 +345,7 @@ const Index = () => {
 
   const handleViewBooksClick = (itemId) => {
     if (itemId) {
-      console.log(`View Units clicked for item with ID: ${itemId}`)
+      console.log(`View Books Id: ${itemId}`)
     }
   }
   return (
@@ -346,7 +423,7 @@ const Index = () => {
                               <p className="cotent-text">{item.name}</p> */}
                               <div className="content-pdf-box">
                                 <p className="cotent-text">
-                                  {`${item.metadata.keywords},`}
+                                  {`${item.metadata.keywords}`}
                                 </p>
                               </div>
                               <p className="cotent-text">{item.description}</p>
@@ -392,7 +469,7 @@ const Index = () => {
                                   className="unit-btn"
                                   onClick={() => handleViewBooksClick(item.id)}
                                 >
-                                  View Books
+                                  {item.id ? 'View Books' : 'Hide books'}
                                 </button>
                                 <img src={RightArow} alt="arrow" />
                               </div>
@@ -406,12 +483,11 @@ const Index = () => {
                   <Card>
                     <Accordion.Collapse eventKey={i + 1}>
                       <Card.Body className="playlist-card">
-                        {item?.breadcrumb?.itemListElement?.map(
-                          (itemList, index) => (
-                            <Accordion key={index}>
-                              <Card>
+                        <Accordion>
+                          {item?.breadcrumb?.itemListElement?.map(
+                            (itemList, index) => (
+                              <Card key={index}>
                                 {/* inner book 1*/}
-
                                 <Card.Header>
                                   <Accordion.Toggle
                                     className="d-flex align-items-center search-project-card-head"
@@ -473,9 +549,10 @@ const Index = () => {
                                   <Accordion.Collapse eventKey={index + 1}>
                                     <Card.Body className="playlist-card inner-card-body">
                                       <Accordion>
-                                        <Card>
-                                          {/* inner unit 1 */}
-                                          {itemList?.unit?.length ? (
+                                        {itemList?.unit?.length ? (
+                                          <Card>
+                                            {/* inner unit 1 */}
+
                                             <Card.Header>
                                               <Accordion.Toggle
                                                 className="d-flex align-items-center search-project-card-head"
@@ -546,100 +623,105 @@ const Index = () => {
                                                 </ul>
                                               </Accordion.Toggle>
                                             </Card.Header>
-                                          ) : (
-                                            <Alert variant="warning">
-                                              No result found !
-                                            </Alert>
-                                          )}
-                                          {/* inner chapter 1 */}
 
-                                          <Accordion.Collapse
-                                            eventKey={index + 1}
-                                          >
-                                            <Card.Body className="playlist-card inner-card-body">
-                                              <Accordion>
-                                                <Card>
-                                                  <Card.Header>
-                                                    <Accordion.Toggle
-                                                      className="d-flex align-items-center search-project-card-head"
-                                                      variant="link"
-                                                    >
-                                                      <ul className="search-playllist-content">
-                                                        <li
-                                                          className={
-                                                            'active-li'
-                                                          }
-                                                        >
-                                                          <div className="search-playlist-title">
-                                                            <img
-                                                              src={ReadBook}
-                                                              alt="image"
-                                                            />
-                                                            <h3 className="playlist-title playlist-inner-title">
-                                                              {
-                                                                itemList
-                                                                  ?.chapter
-                                                                  ?.name
-                                                              }
-                                                            </h3>
-                                                          </div>
-                                                          <div className="contentbox">
-                                                            <Dropdown className="playlist-dropdown check show dropdown">
-                                                              <Dropdown.Toggle>
-                                                                <img
-                                                                  src={Elipsis}
-                                                                  alt="elipsis"
-                                                                />
-                                                              </Dropdown.Toggle>
-                                                              <Dropdown.Menu>
-                                                                <>
-                                                                  <Dropdown.Item>
-                                                                    <div className="dropDown-item-name-icon">
-                                                                      <PreviewSm />
-                                                                      <span>
-                                                                        Preview
-                                                                      </span>
-                                                                    </div>
-                                                                  </Dropdown.Item>
-                                                                  <Dropdown.Item>
-                                                                    <div className="dropDown-item-name-icon">
-                                                                      <PlusSm />
-                                                                      <span>
-                                                                        Add to
-                                                                        LMS
-                                                                      </span>
-                                                                    </div>
-                                                                  </Dropdown.Item>
-                                                                </>
-                                                              </Dropdown.Menu>
-                                                            </Dropdown>
-                                                          </div>
-                                                        </li>
-                                                      </ul>
-                                                    </Accordion.Toggle>
-                                                  </Card.Header>
-                                                </Card>
-                                              </Accordion>
-                                            </Card.Body>
-                                          </Accordion.Collapse>
-                                        </Card>
+                                            {/* inner chapter 1 */}
+
+                                            <Accordion.Collapse
+                                              eventKey={index + 1}
+                                            >
+                                              <Card.Body className="playlist-card inner-card-body">
+                                                <Accordion>
+                                                  <Card>
+                                                    <Card.Header>
+                                                      <Accordion.Toggle
+                                                        className="d-flex align-items-center search-project-card-head"
+                                                        variant="link"
+                                                      >
+                                                        <ul className="search-playllist-content">
+                                                          <li
+                                                            className={
+                                                              'active-li'
+                                                            }
+                                                          >
+                                                            <div className="search-playlist-title">
+                                                              <img
+                                                                src={ReadBook}
+                                                                alt="image"
+                                                              />
+                                                              <h3 className="playlist-title playlist-inner-title">
+                                                                {
+                                                                  itemList
+                                                                    ?.chapter
+                                                                    ?.name
+                                                                }
+                                                              </h3>
+                                                            </div>
+                                                            <div className="contentbox">
+                                                              <Dropdown className="playlist-dropdown check show dropdown">
+                                                                <Dropdown.Toggle>
+                                                                  <img
+                                                                    src={
+                                                                      Elipsis
+                                                                    }
+                                                                    alt="elipsis"
+                                                                  />
+                                                                </Dropdown.Toggle>
+                                                                <Dropdown.Menu>
+                                                                  <>
+                                                                    <Dropdown.Item>
+                                                                      <div className="dropDown-item-name-icon">
+                                                                        <PreviewSm />
+                                                                        <span>
+                                                                          Preview
+                                                                        </span>
+                                                                      </div>
+                                                                    </Dropdown.Item>
+                                                                    <Dropdown.Item>
+                                                                      <div className="dropDown-item-name-icon">
+                                                                        <PlusSm />
+                                                                        <span>
+                                                                          Add to
+                                                                          LMS
+                                                                        </span>
+                                                                      </div>
+                                                                    </Dropdown.Item>
+                                                                  </>
+                                                                </Dropdown.Menu>
+                                                              </Dropdown>
+                                                            </div>
+                                                          </li>
+                                                        </ul>
+                                                      </Accordion.Toggle>
+                                                    </Card.Header>
+                                                  </Card>
+                                                </Accordion>
+                                              </Card.Body>
+                                            </Accordion.Collapse>
+                                          </Card>
+                                        ) : (
+                                          <Alert variant="warning">
+                                            No result found !
+                                          </Alert>
+                                        )}
                                       </Accordion>
                                     </Card.Body>
                                   </Accordion.Collapse>
                                 </Card>
                               </Card>
-                            </Accordion>
-                          ),
-                        )}
+                            ),
+                          )}
+                        </Accordion>
                       </Card.Body>
                     </Accordion.Collapse>
                   </Card>
                 </Card>
               ))}
-              {filteredData.length > 0 && startSearching && (
-                <a href="javascript:void(0)" className="seeMore-link">
-                  See more
-                </a>
+              {visibleItems > filteredData.length && (
+                <button className="seeMore-link" onClick={handleSeeMoreLess}>
+                  {visibleItems !== filteredData.length
+                    ? 'See more'
+                    : 'See Less'}
+                </button>
               )}
             </Accordion>
           ) : (
