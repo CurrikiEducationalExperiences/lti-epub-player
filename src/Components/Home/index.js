@@ -1,13 +1,18 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useState, useEffect } from 'react'
+
 import { Accordion, Card, Dropdown } from 'react-bootstrap'
 import Alert from 'react-bootstrap/Alert'
+
+import { Api } from '../../dummyApi'
+
+import ViewBook from '../ViewBook'
+import ViewUnit from '../ViewUnit'
+import ViewChapter from '../ViewChapter'
 
 import Filter from '../../assets/images/filterview.svg'
 import ListView from '../../assets/images/listview.svg'
 import GridView from '../../assets/images/gridview.svg'
-import Book from '../../assets/images/book-img.png'
-import ReadBook from '../../assets/images/readbook.png'
 import RightArow from '../../assets/images/right-arrow.svg'
 import Elipsis from '../../assets/images/elipsis.svg'
 
@@ -19,321 +24,35 @@ import SearchInputMd from '../../assets/images/SearchInputMdSvg'
 import './style.scss'
 import './project.scss'
 
-const api = [
-  {
-    data: [
-      {
-        img: Book,
-        id: '699cded0-889f-11ee-a457-5b6863f723b1',
-        title: 'Chapter 1: What Are Medical Ethics?',
-        description: 'Chapter 1: What Are Medical Ethics?',
-        licenseemail: 'antonioetayo@gmail.com',
-        breadcrumb: {
-          id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/BreadcrumbList',
-          type: 'sdons:BreadcrumbList',
-          itemListElement: [
-            {
-              item: {
-                id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/ListItem/aetest',
-                name: 'aetest',
-              },
-              unit: [
-                {
-                  id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/ChapterItem/aetest',
-                  name: 'unit aetest',
-                },
-              ],
-              chapter: {
-                name: 'Chapter aetest',
-              },
-              type: 'sdons:ListItem',
-              position: 0,
-            },
-            {
-              item: {
-                id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/ListItem/Medical-Ethics-For-Dummies',
-                name: 'Medical Ethics For Dummies',
-              },
-              unit: [
-                {
-                  id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/ChapterItem/aetest',
-                  name: 'unit aetest',
-                },
-              ],
-              chapter: {
-                name: 'Chapter aetest',
-              },
-              type: 'sdons:ListItem',
-              position: 1,
-            },
-            {
-              item: {
-                id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/ListItem/Part-I:-Medical-Ethics,-or-Doing-the-Right-Thing',
-                name: 'Part I: Medical Ethics, or Doing the Right Thing',
-              },
-              unit: [
-                {
-                  id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/ChapterItem/aetest',
-                  name: 'unit aetest',
-                },
-              ],
-              chapter: {
-                name: 'Chapter aetest',
-              },
-              type: 'sdons:ListItem',
-              position: 2,
-            },
-          ],
-        },
-        author: {
-          id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/author/id/mike@curriki.org',
-          url: '',
-          name: 'Mike Francis',
-          type: 'sdons:Person',
-          email: 'mike@curriki.org',
-        },
-        metadata: {
-          id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/metadata/general',
-          type: 'sdons:Dataset',
-          title: 'Chapter 1: What Are Medical Ethics?',
-          keywords: ['Education', 'Curriculum', 'Curriki', 'EPUB'],
-          description: 'Chapter 1: What Are Medical Ethics?',
-        },
-      },
-      {
-        img: Book,
-        id: '699cded0-889f-11ee-a457-5b6863f723b2',
-        title: 'Chapter 2: What Are Medical Ethics?',
-        description: 'Chapter 2: What Are Medical Ethics?',
-        licenseemail: 'antonioetayo@gmail.com',
-        breadcrumb: {
-          id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/BreadcrumbList',
-          type: 'sdons:BreadcrumbList',
-          itemListElement: [
-            {
-              item: {
-                id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/ListItem/aetest',
-                name: 'aetest',
-              },
-              unit: [
-                {
-                  id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/ChapterItem/aetest',
-                  name: 'unit aetest',
-                },
-              ],
-              chapter: {
-                name: 'Chapter aetest',
-              },
-              type: 'sdons:ListItem',
-              position: 0,
-            },
-            {
-              item: {
-                id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/ListItem/Medical-Ethics-For-Dummies',
-                name: 'Medical Ethics For Dummies',
-              },
-              unit: [
-                {
-                  id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/ChapterItem/aetest',
-                  name: 'unit aetest',
-                },
-              ],
-              chapter: {
-                name: 'Chapter aetest',
-              },
-              type: 'sdons:ListItem',
-              position: 1,
-            },
-            {
-              item: {
-                id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/ListItem/Part-I:-Medical-Ethics,-or-Doing-the-Right-Thing',
-                name: 'Part I: Medical Ethics, or Doing the Right Thing',
-              },
-              unit: [
-                {
-                  id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/ChapterItem/aetest',
-                  name: 'unit aetest',
-                },
-              ],
-              chapter: {
-                name: 'Chapter aetest',
-              },
-              type: 'sdons:ListItem',
-              position: 2,
-            },
-          ],
-        },
-        author: {
-          id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/author/id/mike@curriki.org',
-          url: '',
-          name: 'Mike Francis',
-          type: 'sdons:Person',
-          email: 'mike@curriki.org',
-        },
-        metadata: {
-          id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/metadata/general',
-          type: 'sdons:Dataset',
-          title: 'Chapter 1: What Are Medical Ethics?',
-          keywords: ['Education', 'Curriculum', 'Curriki', 'EPUB'],
-          description: 'Chapter 1: What Are Medical Ethics?',
-        },
-      },
-      {
-        img: Book,
-        id: '699cded0-889f-11ee-a457-5b6863f723b3',
-        title: 'Chapter 3: What Are Medical Ethics?',
-        description: 'Chapter 3: What Are Medical Ethics?',
-        licenseemail: 'antonioetayo@gmail.com',
-        breadcrumb: {
-          id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/BreadcrumbList',
-          type: 'sdons:BreadcrumbList',
-          itemListElement: [
-            {
-              item: {
-                id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/ListItem/aetest',
-                name: 'aetest',
-              },
-              unit: [
-                {
-                  id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/ChapterItem/aetest',
-                  name: 'unit aetest',
-                },
-              ],
-              chapter: {
-                name: 'Chapter aetest',
-              },
-              type: 'sdons:ListItem',
-              position: 0,
-            },
-            {
-              item: {
-                id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/ListItem/Medical-Ethics-For-Dummies',
-                name: 'Medical Ethics For Dummies',
-              },
-              type: 'sdons:ListItem',
-              position: 1,
-            },
-            {
-              item: {
-                id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/ListItem/Part-I:-Medical-Ethics,-or-Doing-the-Right-Thing',
-                name: 'Part I: Medical Ethics, or Doing the Right Thing',
-              },
-              type: 'sdons:ListItem',
-              position: 2,
-            },
-          ],
-        },
-        author: {
-          id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/author/id/mike@curriki.org',
-          url: '',
-          name: 'Mike Francis',
-          type: 'sdons:Person',
-          email: 'mike@curriki.org',
-        },
-        metadata: {
-          id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/metadata/general',
-          type: 'sdons:Dataset',
-          title: 'Chapter 1: What Are Medical Ethics?',
-          keywords: ['Education', 'Curriculum', 'Curriki', 'EPUB'],
-          description: 'Chapter 1: What Are Medical Ethics?',
-        },
-      },
-      {
-        img: Book,
-        id: '699cded0-889f-11ee-a457-5b6863f723b4',
-        title: 'Chapter 4: What Are Medical Ethics?',
-        description: 'Chapter 4: What Are Medical Ethics?',
-        licenseemail: 'antonioetayo@gmail.com',
-        breadcrumb: {
-          id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/BreadcrumbList',
-          type: 'sdons:BreadcrumbList',
-          itemListElement: [
-            {
-              item: {
-                id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/ListItem/aetest',
-                name: 'aetest',
-              },
-              unit: [
-                {
-                  id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/ChapterItem/aetest',
-                  name: 'unit aetest',
-                },
-              ],
-              chapter: {
-                name: 'Chapter aetest',
-              },
-              type: 'sdons:ListItem',
-              position: 0,
-            },
-            {
-              item: {
-                id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/ListItem/Medical-Ethics-For-Dummies',
-                name: 'Medical Ethics For Dummies',
-              },
-              type: 'sdons:ListItem',
-              position: 1,
-            },
-            {
-              item: {
-                id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/ListItem/Part-I:-Medical-Ethics,-or-Doing-the-Right-Thing',
-                name: 'Part I: Medical Ethics, or Doing the Right Thing',
-              },
-              type: 'sdons:ListItem',
-              position: 2,
-            },
-          ],
-        },
-        author: {
-          id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/author/id/mike@curriki.org',
-          url: '',
-          name: 'Mike Francis',
-          type: 'sdons:Person',
-          email: 'mike@curriki.org',
-        },
-        metadata: {
-          id: 'c2ens:c2eid-699cded0-889f-11ee-a457-5b6863f723b1/metadata/general',
-          type: 'sdons:Dataset',
-          title: 'Chapter 1: What Are Medical Ethics?',
-          keywords: ['Education', 'Curriculum', 'Curriki', 'EPUB'],
-          description: 'Chapter 1: What Are Medical Ethics?',
-        },
-      },
-    ],
-    count: {
-      count: 3,
-    },
-    page: 1,
-    limit: 10,
-  },
-]
 const Index = () => {
   // search
   const [startSearching, setStartSearching] = useState('')
-  console.log('setStartSearching', startSearching)
 
+  const [allCollection, setAllCollection] = useState([])
+  console.log('allCollection', allCollection)
+
+  const [allBooks, setAllBooks] = useState([])
+  console.log('allBooks', allBooks)
   // handle buttons
-  const [visibleItems, setVisibleItems] = useState(4)
+  const [visibleItems, setVisibleItems] = useState(3)
 
   const handleSeeMoreLess = () => {
     // Toggle the visibility of the "See More" button
     setVisibleItems((prevVisibleItems) => {
-      const newVisibleItems = prevVisibleItems + 4
+      const newVisibleItems = prevVisibleItems + 3
 
       // If all items are visible, hide the "See More" button
       if (newVisibleItems >= filteredData.length) {
         return filteredData.length
       }
-
-      // Otherwise, show the "See More" button
       return newVisibleItems
     })
   }
   // search data
   const [searchContent, setSearchContent] = useState([])
 
-  const apiItem = api[0].data.map((item) => item)
+  const apiItem = Api[0].data.map((item) => item)
   console.log('apiItem', apiItem)
-
   const filteredData = apiItem.filter((item) =>
     item.title.toLowerCase().includes(startSearching.toLowerCase()),
   )
@@ -348,6 +67,84 @@ const Index = () => {
       console.log(`View Books Id: ${itemId}`)
     }
   }
+  //
+  function removeDuplicateObjects(data) {
+    const uniqueIds = new Set()
+    const result = []
+
+    data.forEach((item) => {
+      const itemId = item.item.id
+      if (!uniqueIds.has(itemId)) {
+        uniqueIds.add(itemId)
+        result.push(item)
+      }
+    })
+
+    return result
+  }
+  function createTree(data) {
+    const result = data.map((item) => {
+      return item.breadcrumb.itemListElement.filter((list) => {
+        if (list.position === 0) {
+          return list
+        }
+      })[0]
+    })
+    setAllCollection(removeDuplicateObjects(result))
+    console.log(result)
+  }
+  function createTree2(data) {
+    const result = data.map((item) => {
+      return item.breadcrumb.itemListElement.filter((list) => {
+        if (list.position === 1) {
+          return list
+        }
+      })[0]
+    })
+    setAllBooks(removeDuplicateObjects(result))
+    console.log(result)
+  }
+  const getAllBooks = (data) => {
+    const result = Api[0].data.filter((item) => {
+      return item.breadcrumb.itemListElement.filter((list) => {
+        if (list.item.id === data.item.id) {
+          console.log('found collection')
+          return item.breadcrumb.itemListElement.filter((book) => {
+            if (book.position === 0) {
+              console.log('book collection', book)
+              return book
+            }
+          })
+        }
+      })[0]
+    })
+
+    console.log('result', result)
+  }
+  const getAllUnits = (data) => {
+    const result = Api[0].data.filter((item) => {
+      return item.breadcrumb.itemListElement.filter((list) => {
+        if (list.item.id === data.item.id) {
+          console.log('found books')
+          return item.breadcrumb.itemListElement.filter((book) => {
+            if (book.position === 1) {
+              console.log('book books', book)
+              return book
+            }
+          })
+        }
+      })[0]
+    })
+
+    console.log('result', result)
+  }
+  useEffect(() => {
+    createTree(Api[0].data)
+  }, [])
+  useEffect(() => {
+    createTree2(Api[0].data)
+  }, [])
+  //
   return (
     <div className="content-wrapper content-wrapper-project small-grid">
       <h2 className="resource_heading">Link Resource from External Tool</h2>
@@ -375,10 +172,7 @@ const Index = () => {
                 setStartSearching(e.target.value)
               }}
             />
-            <SearchInputMd
-              // primaryColor={primaryColor}
-              style={{ cursor: 'pointer' }}
-            />
+            <SearchInputMd style={{ cursor: 'pointer' }} />
           </div>
           <div className="inner-filter-box">
             <img src={Filter} alt="filter" />
@@ -393,6 +187,34 @@ const Index = () => {
         )}
       </div>
       <div>
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <div>
+            {allCollection.map((data) => {
+              return (
+                <div
+                  onClick={() => {
+                    getAllBooks(data)
+                  }}
+                >
+                  {data.item.name}
+                </div>
+              )
+            })}
+          </div>
+          <div>
+            {allBooks.map((data) => {
+              return (
+                <div
+                  onClick={() => {
+                    getAllUnits(data)
+                  }}
+                >
+                  {data.item.name}
+                </div>
+              )
+            })}
+          </div>
+        </div>
         <div className="tab-content">
           {filteredData.length ? (
             <Accordion>
@@ -419,8 +241,6 @@ const Index = () => {
                               >
                                 {item.title}
                               </h3>
-                              {/* <p className="cotent-text">{item.collection}</p>
-                              <p className="cotent-text">{item.name}</p> */}
                               <div className="content-pdf-box">
                                 <p className="cotent-text">
                                   {`${item.metadata.keywords}`}
@@ -443,14 +263,10 @@ const Index = () => {
                                 <Dropdown.Menu>
                                   <>
                                     <Dropdown.Item>
-                                      {/* <a href={``} target="_blank"> */}
                                       <div className="dropDown-item-name-icon">
-                                        <PreviewSm
-                                        // primaryColor={primaryColor}
-                                        />
+                                        <PreviewSm />
                                         <span>Preview</span>
                                       </div>
-                                      {/* </a> */}
                                     </Dropdown.Item>
                                     <Dropdown.Item>
                                       <div className="dropDown-item-name-icon">
@@ -487,222 +303,29 @@ const Index = () => {
                           {item?.breadcrumb?.itemListElement?.map(
                             (itemList, index) => (
                               <Card key={index}>
-                                {/* inner book 1*/}
-                                <Card.Header>
-                                  <Accordion.Toggle
-                                    className="d-flex align-items-center search-project-card-head"
-                                    variant="link"
-                                    eventKey={index + 1}
-                                  >
-                                    <ul className="search-playllist-content">
-                                      <li className={'active-li'}>
-                                        <div className="search-playlist-title">
-                                          <img src={ReadBook} alt="image" />
-                                          <h3 className="playlist-title">
-                                            {itemList.item.name}
-                                          </h3>
-                                        </div>
-                                        <div className="view-btn-box">
-                                          <div className="view-unit-box">
-                                            <button
-                                              className="unit-btn"
-                                              onClick={() => itemList.item.id}
-                                            >
-                                              View Units
-                                            </button>
-                                            <img src={RightArow} alt="arrow" />
-                                          </div>
-                                        </div>
-                                        <div className="contentbox">
-                                          <Dropdown className="playlist-dropdown check show dropdown">
-                                            <Dropdown.Toggle>
-                                              <img
-                                                src={Elipsis}
-                                                alt="elipsis"
-                                              />
-                                            </Dropdown.Toggle>
-                                            <Dropdown.Menu>
-                                              <>
-                                                <Dropdown.Item>
-                                                  <div className="dropDown-item-name-icon">
-                                                    <PreviewSm />
-                                                    <span>Preview</span>
-                                                  </div>
-                                                </Dropdown.Item>
-                                                <Dropdown.Item>
-                                                  <div className="dropDown-item-name-icon">
-                                                    <PlusSm />
-                                                    <span>Add to LMS</span>
-                                                  </div>
-                                                </Dropdown.Item>
-                                              </>
-                                            </Dropdown.Menu>
-                                          </Dropdown>
-                                        </div>
-                                      </li>
-                                    </ul>
-                                  </Accordion.Toggle>
-                                </Card.Header>
-                                {/* inner unit card body */}
-
+                                {/* View Book */}
+                                <ViewBook index={index} itemList={itemList} />
                                 <Card>
                                   <Accordion.Collapse eventKey={index + 1}>
                                     <Card.Body className="playlist-card inner-card-body">
                                       <Accordion>
-                                        {itemList?.unit?.length ? (
-                                          <Card>
-                                            {/* inner unit 1 */}
-
-                                            <Card.Header>
-                                              <Accordion.Toggle
-                                                className="d-flex align-items-center search-project-card-head"
-                                                variant="link"
-                                                eventKey={index + 1}
-                                              >
-                                                <ul className="search-playllist-content">
-                                                  <li className={'active-li'}>
-                                                    <div className="search-playlist-title">
-                                                      <img
-                                                        src={ReadBook}
-                                                        alt="image"
-                                                      />
-                                                      <h3 className="playlist-title playlist-inner-title">
-                                                        {
-                                                          itemList?.unit[0]
-                                                            ?.name
-                                                        }
-                                                      </h3>
-                                                    </div>
-                                                    <div className="view-btn-box ch-box">
-                                                      <div className="view-unit-box">
-                                                        <button
-                                                          className="unit-btn"
-                                                          onClick={() =>
-                                                            itemList?.unit?.id
-                                                          }
-                                                        >
-                                                          View Chapters
-                                                        </button>
-                                                        <img
-                                                          src={RightArow}
-                                                          alt="arrow"
-                                                        />
-                                                      </div>
-                                                    </div>
-                                                    <div className="contentbox">
-                                                      <Dropdown className="playlist-dropdown check show dropdown">
-                                                        <Dropdown.Toggle>
-                                                          <img
-                                                            src={Elipsis}
-                                                            alt="elipsis"
-                                                          />
-                                                        </Dropdown.Toggle>
-                                                        <Dropdown.Menu>
-                                                          <>
-                                                            <Dropdown.Item>
-                                                              <div className="dropDown-item-name-icon">
-                                                                <PreviewSm />
-                                                                <span>
-                                                                  Preview
-                                                                </span>
-                                                              </div>
-                                                            </Dropdown.Item>
-                                                            <Dropdown.Item>
-                                                              <div className="dropDown-item-name-icon">
-                                                                <PlusSm />
-                                                                <span>
-                                                                  Add to LMS
-                                                                </span>
-                                                              </div>
-                                                            </Dropdown.Item>
-                                                          </>
-                                                        </Dropdown.Menu>
-                                                      </Dropdown>
-                                                    </div>
-                                                  </li>
-                                                </ul>
-                                              </Accordion.Toggle>
-                                            </Card.Header>
-
-                                            {/* inner chapter 1 */}
-
-                                            <Accordion.Collapse
-                                              eventKey={index + 1}
-                                            >
-                                              <Card.Body className="playlist-card inner-card-body">
-                                                <Accordion>
-                                                  <Card>
-                                                    <Card.Header>
-                                                      <Accordion.Toggle
-                                                        className="d-flex align-items-center search-project-card-head"
-                                                        variant="link"
-                                                      >
-                                                        <ul className="search-playllist-content">
-                                                          <li
-                                                            className={
-                                                              'active-li'
-                                                            }
-                                                          >
-                                                            <div className="search-playlist-title">
-                                                              <img
-                                                                src={ReadBook}
-                                                                alt="image"
-                                                              />
-                                                              <h3 className="playlist-title playlist-inner-title">
-                                                                {
-                                                                  itemList
-                                                                    ?.chapter
-                                                                    ?.name
-                                                                }
-                                                              </h3>
-                                                            </div>
-                                                            <div className="contentbox">
-                                                              <Dropdown className="playlist-dropdown check show dropdown">
-                                                                <Dropdown.Toggle>
-                                                                  <img
-                                                                    src={
-                                                                      Elipsis
-                                                                    }
-                                                                    alt="elipsis"
-                                                                  />
-                                                                </Dropdown.Toggle>
-                                                                <Dropdown.Menu>
-                                                                  <>
-                                                                    <Dropdown.Item>
-                                                                      <div className="dropDown-item-name-icon">
-                                                                        <PreviewSm />
-                                                                        <span>
-                                                                          Preview
-                                                                        </span>
-                                                                      </div>
-                                                                    </Dropdown.Item>
-                                                                    <Dropdown.Item>
-                                                                      <div className="dropDown-item-name-icon">
-                                                                        <PlusSm />
-                                                                        <span>
-                                                                          Add to
-                                                                          LMS
-                                                                        </span>
-                                                                      </div>
-                                                                    </Dropdown.Item>
-                                                                  </>
-                                                                </Dropdown.Menu>
-                                                              </Dropdown>
-                                                            </div>
-                                                          </li>
-                                                        </ul>
-                                                      </Accordion.Toggle>
-                                                    </Card.Header>
-                                                  </Card>
-                                                </Accordion>
-                                              </Card.Body>
-                                            </Accordion.Collapse>
-                                          </Card>
-                                        ) : (
-                                          <Alert variant="warning">
-                                            No result found !
-                                          </Alert>
-                                        )}
+                                        <Card>
+                                          {/* View Unit */}
+                                          <ViewUnit
+                                            index={index}
+                                            itemList={itemList}
+                                          />
+                                          <Accordion.Collapse
+                                            eventKey={index + 1}
+                                          >
+                                            <Card.Body className="playlist-card inner-card-body">
+                                              <Accordion>
+                                                {/* View Chapter */}
+                                                <ViewChapter item={item} />
+                                              </Accordion>
+                                            </Card.Body>
+                                          </Accordion.Collapse>
+                                        </Card>
                                       </Accordion>
                                     </Card.Body>
                                   </Accordion.Collapse>
