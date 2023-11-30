@@ -1,5 +1,5 @@
 import React from "react";
-import Main from "../Components/Home";
+import Main from "../Components/Home/test";
 
 function Home() {
   return (
