@@ -16,6 +16,7 @@
     justify-content: space-between;
     border-radius: 8px;
     padding: 16px;
+    position: relative;
     .search-project-box {
       display: flex;
       align-items: center;
@@ -45,6 +46,26 @@
           line-height: 16px;
           margin: 0;
         }
+      }
+    }
+
+    // search-dropdown-data
+    .search-dropdown-sec {
+      width: 100%;
+      height: calc(100vh - 150px);
+
+      position: absolute;
+      top: 63px;
+      left: 0;
+      z-index: 2;
+      background: rgba(8, 72, 145, 0.28);
+      .search-dropdown-data {
+        border-radius: 4px;
+        width: 100%;
+        height: auto;
+        padding: 16px 24px;
+        background: #ffffff;
+        box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
       }
     }
   }
@@ -508,6 +529,49 @@
       color: #084892;
       &:hover {
         color: #2e68bf;
+      }
+    }
+  }
+}
+
+// test accordion
+.tab-content.book-accordion {
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+  .book-acc {
+    .book-acc-card {
+      .acc-card-header {
+        padding: 18px 28px 18px 20px !important;
+        // border-bottom: 0 !important;
+        outline: none !important;
+        border-radius: 0 !important;
+        margin-bottom: 0 !important;
+
+        .accordion-toggle-header {
+          width: 100%;
+          border: none !important;
+          outline: none !important;
+          padding: 0 !important;
+
+          .box {
+            min-height: auto !important;
+            border-bottom: 0 !important;
+            padding: 0 !important;
+
+            .imgbox {
+              width: 10% !important;
+              height: 82px;
+              object-fit: cover;
+            }
+          }
+        }
+      }
+
+      .playlist-card.inner-card-body.acc-card-body {
+        padding-top: 20px !important;
+        padding-bottom: 20px !important;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
       }
     }
   }
