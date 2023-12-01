@@ -45,8 +45,42 @@ const Index = () => {
   const [startSearching, setStartSearching] = useState("");
 
   const filteredData = allData?.children?.filter((item) =>
-    item?.name?.toLowerCase()?.includes(startSearching?.toLowerCase()),
+    item?.name?.toLowerCase()?.includes(startSearching?.toLowerCase())
   );
+
+  useEffect(() => {
+    const params = {
+      page: 1,
+      limit: 10,
+      query: "",
+      email: "katyisd@curriki.org",
+      secret:
+        "380beb2f50af32dc3890c138122c710314d6ff75eb6d7ee88130ec7de7371a76",
+    };
+
+    // Constructing the URL with query parameters
+    const url = new URL("https://c2e-services.curriki.org/licenses");
+    Object.keys(params).forEach((key) =>
+      url.searchParams.append(key, params[key])
+    );
+
+    // Making a GET fetch request
+    fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Handle the fetched data here
+        console.log(data);
+      })
+      .catch((error) => {
+        // Handle errors here
+        console.error("There was a problem with the fetch request:", error);
+      });
+  }, []);
 
   console.log("filteredData", filteredData);
   useEffect(() => {

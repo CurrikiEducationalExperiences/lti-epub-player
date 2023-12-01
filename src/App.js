@@ -7,6 +7,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/deeplink" element={<Home />} />
         </Routes>
       </BrowserRouter>
     </div>
