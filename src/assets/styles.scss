@@ -1,10 +1,25 @@
-@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&display=swap');
 * {
-  font-family: "Rubik", sans-serif;
+  font-family: 'Rubik', sans-serif;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   scroll-behavior: smooth;
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 7px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #d6d6d6;
+    border-radius: 4px;
+    &:hover {
+      background: #555;
+      cursor: pointer;
+    }
+  }
+  ::-webkit-scrollbar-track {
+    background: #fff;
+  }
 }
 
 h1,
