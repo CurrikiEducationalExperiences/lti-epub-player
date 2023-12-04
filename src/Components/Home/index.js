@@ -1,106 +1,178 @@
-import React, { useState, useEffect } from "react";
-import { Accordion, Card, Dropdown } from "react-bootstrap";
-// import { getGlobalColor } from "containers/App/DynamicBrandingApply";
-import Alert from "react-bootstrap/Alert";
+/* eslint-disable jsx-a11y/img-redundant-alt */
+import React, { useState, useEffect } from 'react'
 
-import Filter from "../../assets/images/filterview.svg";
-import ListView from "../../assets/images/listview.svg";
-import GridView from "../../assets/images/gridview.svg";
-import Book from "../../assets/images/book-img.png";
-import ReadBook from "../../assets/images/readbook.png";
-import RightArow from "../../assets/images/right-arrow.svg";
-import Elipsis from "../../assets/images/elipsis.svg";
+import { Accordion, Card, Dropdown } from 'react-bootstrap'
+import Alert from 'react-bootstrap/Alert'
 
-import PreviewSm from "../../assets/images/PreviewSmSvg";
-import PlusSm from "../../assets/images/PlusSmSvg";
+import { Api } from '../../dummyApi'
 
-import SearchInputMd from "../../assets/images/SearchInputMdSvg";
+import ViewBook from '../ViewBook'
+import ViewUnit from '../ViewUnit'
+import ViewChapter from '../ViewChapter'
 
-import "./style.scss";
-import "./project.scss";
+import Filter from '../../assets/images/filterview.svg'
+import ListView from '../../assets/images/listview.svg'
+import GridView from '../../assets/images/gridview.svg'
+import RightArow from '../../assets/images/right-arrow.svg'
+import Elipsis from '../../assets/images/elipsis.svg'
 
-const searchCollection = [
-  {
-    img: Book,
-    collectionname: "Programming Fundamentals",
-    collection: "Collection",
-    name: " Shiaki A. Minami, Shruthi S. Garimella, Priya S. Shah",
-    category: " Biotechnology Journal",
-    publishdate: "2 November 2022",
-    description: "Description",
-    preview: "Preview",
-  },
-  {
-    img: Book,
-    collectionname: "Object Oriented Programming",
-    collection: "Collection",
-    name: " Shiaki A. Minami, Shruthi S. Garimella, Priya S. Shah",
-    category: " Biotechnology Journal",
-    publishdate: "10 December 2021",
-    description: "Description",
-    preview: "Preview",
-  },
-  {
-    img: Book,
-    collectionname: "Data Structures and Algorithm",
-    collection: "Collection",
-    name: " Shiaki A. Minami, Shruthi S. Garimella, Priya S. Shah",
-    category: " Biotechnology Journal",
-    publishdate: "25 October 2023",
-    description: "Description",
-    preview: "Preview",
-  },
-];
+import PreviewSm from '../../assets/images/PreviewSmSvg'
+import PlusSm from '../../assets/images/PlusSmSvg'
+
+import SearchInputMd from '../../assets/images/SearchInputMdSvg'
+
+import './style.scss'
+import './project.scss'
 
 const Index = () => {
-  // const primaryColor = getGlobalColor("--main-primary-color");
-
   // search
-  const [startSearching, setStartSearching] = useState("");
-  console.log("setStartSearching", startSearching);
+  const [startSearching, setStartSearching] = useState('')
 
+  const [allCollection, setAllCollection] = useState([])
+  console.log('allCollection', allCollection)
+
+  const [allBooks, setAllBooks] = useState([])
+  console.log('allBooks', allBooks)
+  // handle buttons
+  const [visibleItems, setVisibleItems] = useState(3)
+
+  const handleSeeMoreLess = () => {
+    // Toggle the visibility of the "See More" button
+    setVisibleItems((prevVisibleItems) => {
+      const newVisibleItems = prevVisibleItems + 3
+
+      // If all items are visible, hide the "See More" button
+      if (newVisibleItems >= filteredData.length) {
+        return filteredData.length
+      }
+      return newVisibleItems
+    })
+  }
   // search data
-  const [searchContent, setSearchContent] = useState([]);
-  // filtered data
-  const filteredData = searchCollection.filter((item) =>
-    item.collectionname.toLowerCase().includes(startSearching.toLowerCase()),
-  );
+  const [searchContent, setSearchContent] = useState([])
+
+  const apiItem = Api[0].data.map((item) => item)
+  console.log('apiItem', apiItem)
+  const filteredData = apiItem.filter((item) =>
+    item.title.toLowerCase().includes(startSearching.toLowerCase()),
+  )
   useEffect(() => {
     if (searchContent) {
-      setSearchContent(searchCollection);
+      setSearchContent(apiItem)
     }
-  }, []);
+  }, [])
+
+  const handleViewBooksClick = (itemId) => {
+    if (itemId) {
+      console.log(`View Books Id: ${itemId}`)
+    }
+  }
+  //
+  function removeDuplicateObjects(data) {
+    const uniqueIds = new Set()
+    const result = []
+
+    data.forEach((item) => {
+      const itemId = item.item.id
+      if (!uniqueIds.has(itemId)) {
+        uniqueIds.add(itemId)
+        result.push(item)
+      }
+    })
+
+    return result
+  }
+  function createTree(data) {
+    const result = data.map((item) => {
+      return item.breadcrumb.itemListElement.filter((list) => {
+        if (list.position === 0) {
+          return list
+        }
+      })[0]
+    })
+    setAllCollection(removeDuplicateObjects(result))
+    console.log(result)
+  }
+  function createTree2(data) {
+    const result = data.map((item) => {
+      return item.breadcrumb.itemListElement.filter((list) => {
+        if (list.position === 1) {
+          return list
+        }
+      })[0]
+    })
+    setAllBooks(removeDuplicateObjects(result))
+    console.log(result)
+  }
+  const getAllBooks = (data) => {
+    const result = Api[0].data.filter((item) => {
+      return item.breadcrumb.itemListElement.filter((list) => {
+        if (list.item.id === data.item.id) {
+          console.log('found collection')
+          return item.breadcrumb.itemListElement.filter((book) => {
+            if (book.position === 0) {
+              console.log('book collection', book)
+              return book
+            }
+          })
+        }
+      })[0]
+    })
+
+    console.log('result', result)
+  }
+  const getAllUnits = (data) => {
+    const result = Api[0].data.filter((item) => {
+      return item.breadcrumb.itemListElement.filter((list) => {
+        if (list.item.id === data.item.id) {
+          console.log('found books')
+          return item.breadcrumb.itemListElement.filter((book) => {
+            if (book.position === 1) {
+              console.log('book books', book)
+              return book
+            }
+          })
+        }
+      })[0]
+    })
+
+    console.log('result', result)
+  }
+  useEffect(() => {
+    createTree(Api[0].data)
+  }, [])
+  useEffect(() => {
+    createTree2(Api[0].data)
+  }, [])
+  //
   return (
     <div className="content-wrapper content-wrapper-project small-grid">
       <h2 className="resource_heading">Link Resource from External Tool</h2>
       <div
         className="my-project-cards-top-search-filter search-project-filter"
-        style={{ margin: !!startSearching ? "0" : "0 0 16px" }}
+        style={{ margin: !!startSearching ? '0' : '0 0 16px' }}
       >
         <div
           className="search-project-box"
           style={{
-            width: !!startSearching ? "100%" : "auto",
-            justifyContent: !!startSearching ? "space-between" : "flex-start",
+            width: !!startSearching ? '100%' : 'auto',
+            justifyContent: !!startSearching ? 'space-between' : 'flex-start',
           }}
         >
           <div
             className="search-bar"
-            style={{ width: !!startSearching ? "100%" : "auto" }}
+            style={{ width: !!startSearching ? '100%' : 'auto' }}
           >
             <input
-              style={{ width: !!startSearching ? "100%" : "auto" }}
+              style={{ width: !!startSearching ? '100%' : 'auto' }}
               type="text"
               placeholder="Search project"
               value={startSearching}
               onChange={(e) => {
-                setStartSearching(e.target.value);
+                setStartSearching(e.target.value)
               }}
             />
-            <SearchInputMd
-              // primaryColor={primaryColor}
-              style={{ cursor: "pointer" }}
-            />
+            <SearchInputMd style={{ cursor: 'pointer' }} />
           </div>
           <div className="inner-filter-box">
             <img src={Filter} alt="filter" />
@@ -115,6 +187,34 @@ const Index = () => {
         )}
       </div>
       <div>
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <div>
+            {allCollection.map((data) => {
+              return (
+                <div
+                  onClick={() => {
+                    getAllBooks(data)
+                  }}
+                >
+                  {data.item.name}
+                </div>
+              )
+            })}
+          </div>
+          <div>
+            {allBooks.map((data) => {
+              return (
+                <div
+                  onClick={() => {
+                    getAllUnits(data)
+                  }}
+                >
+                  {data.item.name}
+                </div>
+              )
+            })}
+          </div>
+        </div>
         <div className="tab-content">
           {filteredData.length ? (
             <Accordion>
@@ -135,27 +235,22 @@ const Index = () => {
                               <h3
                                 className={
                                   i === 1
-                                    ? "content_heading view_content_heading"
-                                    : "content_heading"
+                                    ? 'content_heading view_content_heading'
+                                    : 'content_heading'
                                 }
                               >
-                                {item.collectionname}
+                                {item.title}
                               </h3>
-                              <p className="cotent-text">{item.collection}</p>
-                              <p className="cotent-text">{item.name}</p>
-                              <p className="content-link">
-                                {item.category}
-                                &nbsp;&nbsp;|&nbsp;&nbsp;
-                                <span className="">
-                                  First Published: {item.publishdate}
-                                </span>
-                              </p>
                               <div className="content-pdf-box">
-                                <p className="content-pdf">
-                                  {item.description}
+                                <p className="cotent-text">
+                                  {`${item.metadata.keywords}`}
                                 </p>
+                              </div>
+                              <p className="cotent-text">{item.description}</p>
+                              <div className="content-pdf-box">
+                                <p className="content-pdf">{'description'}</p>
                                 <p className="content-slash"></p>
-                                <p className="content-pdf">{item.preview}</p>
+                                <p className="content-pdf">{'preview'}</p>
                               </div>
                             </div>
                           </div>
@@ -168,20 +263,14 @@ const Index = () => {
                                 <Dropdown.Menu>
                                   <>
                                     <Dropdown.Item>
-                                      {/* <a href={``} target="_blank"> */}
                                       <div className="dropDown-item-name-icon">
-                                        <PreviewSm
-                                        // primaryColor={primaryColor}
-                                        />
+                                        <PreviewSm />
                                         <span>Preview</span>
                                       </div>
-                                      {/* </a> */}
                                     </Dropdown.Item>
                                     <Dropdown.Item>
                                       <div className="dropDown-item-name-icon">
-                                        <PlusSm
-                                        // primaryColor={primaryColor}
-                                        />
+                                        <PlusSm />
                                         <span>Add to LMS</span>
                                       </div>
                                     </Dropdown.Item>
@@ -192,7 +281,12 @@ const Index = () => {
                           ) : (
                             <div className="btn-box">
                               <div className="view-unit-box">
-                                <button className="unit-btn">View Books</button>
+                                <button
+                                  className="unit-btn"
+                                  onClick={() => handleViewBooksClick(item.id)}
+                                >
+                                  {item.id ? 'View Books' : 'Hide books'}
+                                </button>
                                 <img src={RightArow} alt="arrow" />
                               </div>
                             </div>
@@ -206,832 +300,61 @@ const Index = () => {
                     <Accordion.Collapse eventKey={i + 1}>
                       <Card.Body className="playlist-card">
                         <Accordion>
-                          <Card>
-                            {/* inner book 1*/}
-                            <Card.Header>
-                              <Accordion.Toggle
-                                className="d-flex align-items-center search-project-card-head"
-                                variant="link"
-                                eventKey="2"
-                              >
-                                <ul className="search-playllist-content">
-                                  <li className={"active-li"}>
-                                    <div className="search-playlist-title">
-                                      <img src={ReadBook} alt="image" />
-                                      <h3 className="playlist-title">
-                                        Book 1: All About Java
-                                      </h3>
-                                    </div>
-                                    <div className="view-btn-box">
-                                      <div className="view-unit-box">
-                                        <button className="unit-btn">
-                                          View Units
-                                        </button>
-                                        <img src={RightArow} alt="arrow" />
-                                      </div>
-                                    </div>
-                                    <div className="contentbox">
-                                      <Dropdown className="playlist-dropdown check show dropdown">
-                                        <Dropdown.Toggle>
-                                          <img src={Elipsis} alt="elipsis" />
-                                        </Dropdown.Toggle>
-                                        <Dropdown.Menu>
-                                          <>
-                                            <Dropdown.Item>
-                                              {/* <a href={``} target="_blank"> */}
-                                              <div className="dropDown-item-name-icon">
-                                                <PreviewSm
-                                                // primaryColor={primaryColor}
-                                                />
-                                                <span>Preview</span>
-                                              </div>
-                                              {/* </a> */}
-                                            </Dropdown.Item>
-                                            <Dropdown.Item>
-                                              <div className="dropDown-item-name-icon">
-                                                <PlusSm
-                                                // primaryColor={primaryColor}
-                                                />
-                                                <span>Add to LMS</span>
-                                              </div>
-                                            </Dropdown.Item>
-                                          </>
-                                        </Dropdown.Menu>
-                                      </Dropdown>
-                                    </div>
-                                  </li>
-                                </ul>
-                              </Accordion.Toggle>
-                            </Card.Header>
-                            {/* inner book card body */}
-                            <Card>
-                              <Accordion.Collapse eventKey="2">
-                                <Card.Body className="playlist-card inner-card-body">
-                                  <Accordion>
-                                    <Card>
-                                      {/* inner unit 1 */}
-                                      <Card.Header>
-                                        <Accordion.Toggle
-                                          className="d-flex align-items-center search-project-card-head"
-                                          variant="link"
-                                          eventKey="3"
-                                        >
-                                          <ul className="search-playllist-content">
-                                            <li className={"active-li"}>
-                                              <div className="search-playlist-title">
-                                                <img
-                                                  src={ReadBook}
-                                                  alt="image"
-                                                />
-                                                <h3 className="playlist-title playlist-inner-title">
-                                                  Unit 1: What You can do With
-                                                  java
-                                                </h3>
-                                              </div>
-                                              <div className="view-btn-box ch-box">
-                                                <div className="view-unit-box">
-                                                  <button className="unit-btn">
-                                                    View Chapters
-                                                  </button>
-                                                  <img
-                                                    src={RightArow}
-                                                    alt="arrow"
-                                                  />
-                                                </div>
-                                              </div>
-                                              <div className="contentbox">
-                                                <Dropdown className="playlist-dropdown check show dropdown">
-                                                  <Dropdown.Toggle>
-                                                    <img
-                                                      src={Elipsis}
-                                                      alt="elipsis"
-                                                    />
-                                                  </Dropdown.Toggle>
-                                                  <Dropdown.Menu>
-                                                    <>
-                                                      <Dropdown.Item>
-                                                        {/* <a href={``} target="_blank"> */}
-                                                        <div className="dropDown-item-name-icon">
-                                                          <PreviewSm
-                                                          // primaryColor={
-                                                          //   primaryColor
-                                                          // }
-                                                          />
-                                                          <span>Preview</span>
-                                                        </div>
-                                                        {/* </a> */}
-                                                      </Dropdown.Item>
-                                                      <Dropdown.Item>
-                                                        <div className="dropDown-item-name-icon">
-                                                          <PlusSm
-                                                          // primaryColor={
-                                                          //   primaryColor
-                                                          // }
-                                                          />
-                                                          <span>
-                                                            Add to LMS
-                                                          </span>
-                                                        </div>
-                                                      </Dropdown.Item>
-                                                    </>
-                                                  </Dropdown.Menu>
-                                                </Dropdown>
-                                              </div>
-                                            </li>
-                                          </ul>
-                                        </Accordion.Toggle>
-                                      </Card.Header>
-                                      {/* inner chapter 1 */}
-                                      <Accordion.Collapse eventKey="3">
-                                        <Card.Body className="playlist-card inner-card-body">
-                                          <Accordion>
-                                            <Card>
-                                              <Card.Header>
-                                                <Accordion.Toggle
-                                                  className="d-flex align-items-center search-project-card-head"
-                                                  variant="link"
-                                                >
-                                                  <ul className="search-playllist-content">
-                                                    <li className={"active-li"}>
-                                                      <div className="search-playlist-title">
-                                                        <img
-                                                          src={ReadBook}
-                                                          alt="image"
-                                                        />
-                                                        <h3 className="playlist-title playlist-inner-title">
-                                                          Chapter 1: What is
-                                                          Java?
-                                                        </h3>
-                                                      </div>
-                                                      <div className="contentbox">
-                                                        <Dropdown className="playlist-dropdown check show dropdown">
-                                                          <Dropdown.Toggle>
-                                                            <img
-                                                              src={Elipsis}
-                                                              alt="elipsis"
-                                                            />
-                                                          </Dropdown.Toggle>
-                                                          <Dropdown.Menu>
-                                                            <>
-                                                              <Dropdown.Item>
-                                                                {/* <a href={``} target="_blank"> */}
-                                                                <div className="dropDown-item-name-icon">
-                                                                  <PreviewSm
-                                                                  // primaryColor={
-                                                                  //   primaryColor
-                                                                  // }
-                                                                  />
-                                                                  <span>
-                                                                    Preview
-                                                                  </span>
-                                                                </div>
-                                                                {/* </a> */}
-                                                              </Dropdown.Item>
-                                                              <Dropdown.Item>
-                                                                <div className="dropDown-item-name-icon">
-                                                                  <PlusSm
-                                                                  // primaryColor={
-                                                                  //   primaryColor
-                                                                  // }
-                                                                  />
-                                                                  <span>
-                                                                    Add to LMS
-                                                                  </span>
-                                                                </div>
-                                                              </Dropdown.Item>
-                                                            </>
-                                                          </Dropdown.Menu>
-                                                        </Dropdown>
-                                                      </div>
-                                                    </li>
-                                                  </ul>
-                                                </Accordion.Toggle>
-                                              </Card.Header>
-                                            </Card>
-                                          </Accordion>
-                                        </Card.Body>
-                                      </Accordion.Collapse>
-                                    </Card>
-                                  </Accordion>
-                                </Card.Body>
-                              </Accordion.Collapse>
-                            </Card>
-                            {/* inner book card body */}
-                            <Card>
-                              <Accordion.Collapse eventKey="2">
-                                <Card.Body className="playlist-card inner-card-body">
-                                  <Accordion>
-                                    <Card>
-                                      {/* inner unit 2 */}
-                                      <Card.Header>
-                                        <Accordion.Toggle
-                                          className="d-flex align-items-center search-project-card-head"
-                                          variant="link"
-                                          eventKey="3"
-                                        >
-                                          <ul className="search-playllist-content">
-                                            <li className={"active-li"}>
-                                              <div className="search-playlist-title">
-                                                <img
-                                                  src={ReadBook}
-                                                  alt="image"
-                                                />
-                                                <h3 className="playlist-title playlist-inner-title">
-                                                  Unit 2: What You can do With
-                                                  java
-                                                </h3>
-                                                <div className="view-btn-box ch-box">
-                                                  <div className="view-unit-box">
-                                                    <button className="unit-btn">
-                                                      View Chapters
-                                                    </button>
-                                                    <img
-                                                      src={RightArow}
-                                                      alt="arrow"
-                                                    />
-                                                  </div>
-                                                </div>
-                                              </div>
-                                              <div className="contentbox">
-                                                <Dropdown className="playlist-dropdown check show dropdown">
-                                                  <Dropdown.Toggle>
-                                                    <img
-                                                      src={Elipsis}
-                                                      alt="elipsis"
-                                                    />
-                                                  </Dropdown.Toggle>
-                                                  <Dropdown.Menu>
-                                                    <>
-                                                      <Dropdown.Item>
-                                                        {/* <a href={``} target="_blank"> */}
-                                                        <div className="dropDown-item-name-icon">
-                                                          <PreviewSm
-                                                          // primaryColor={
-                                                          //   primaryColor
-                                                          // }
-                                                          />
-                                                          <span>Preview</span>
-                                                        </div>
-                                                        {/* </a> */}
-                                                      </Dropdown.Item>
-                                                      <Dropdown.Item>
-                                                        <div className="dropDown-item-name-icon">
-                                                          <PlusSm
-                                                          // primaryColor={
-                                                          //   primaryColor
-                                                          // }
-                                                          />
-                                                          <span>
-                                                            Add to LMS
-                                                          </span>
-                                                        </div>
-                                                      </Dropdown.Item>
-                                                    </>
-                                                  </Dropdown.Menu>
-                                                </Dropdown>
-                                              </div>
-                                            </li>
-                                          </ul>
-                                        </Accordion.Toggle>
-                                      </Card.Header>
-                                      {/* inner chapter 1*/}
-                                      <Accordion.Collapse eventKey="3">
-                                        <Card.Body className="playlist-card inner-card-body">
-                                          <Accordion>
-                                            <Card>
-                                              <Card.Header>
-                                                <Accordion.Toggle
-                                                  className="d-flex align-items-center search-project-card-head"
-                                                  variant="link"
-                                                >
-                                                  <ul className="search-playllist-content">
-                                                    <li className={"active-li"}>
-                                                      <div className="search-playlist-title">
-                                                        <img
-                                                          src={ReadBook}
-                                                          alt="image"
-                                                        />
-                                                        <h3 className="playlist-title playlist-inner-title">
-                                                          Chapter 1: What is
-                                                          Java?
-                                                        </h3>
-                                                      </div>
-                                                      <div className="contentbox">
-                                                        <Dropdown className="playlist-dropdown check show dropdown">
-                                                          <Dropdown.Toggle>
-                                                            <img
-                                                              src={Elipsis}
-                                                              alt="elipsis"
-                                                            />
-                                                          </Dropdown.Toggle>
-                                                          <Dropdown.Menu>
-                                                            <>
-                                                              <Dropdown.Item>
-                                                                {/* <a href={``} target="_blank"> */}
-                                                                <div className="dropDown-item-name-icon">
-                                                                  <PreviewSm
-                                                                  // primaryColor={
-                                                                  //   primaryColor
-                                                                  // }
-                                                                  />
-                                                                  <span>
-                                                                    Preview
-                                                                  </span>
-                                                                </div>
-                                                                {/* </a> */}
-                                                              </Dropdown.Item>
-                                                              <Dropdown.Item>
-                                                                <div className="dropDown-item-name-icon">
-                                                                  <PlusSm
-                                                                  // primaryColor={
-                                                                  //   primaryColor
-                                                                  // }
-                                                                  />
-                                                                  <span>
-                                                                    Add to LMS
-                                                                  </span>
-                                                                </div>
-                                                              </Dropdown.Item>
-                                                            </>
-                                                          </Dropdown.Menu>
-                                                        </Dropdown>
-                                                      </div>
-                                                    </li>
-                                                  </ul>
-                                                </Accordion.Toggle>
-                                              </Card.Header>
-                                            </Card>
-                                          </Accordion>
-                                        </Card.Body>
-                                      </Accordion.Collapse>
-                                      {/* chapter 2 */}
-                                      <Accordion.Collapse eventKey="3">
-                                        <Card.Body className="playlist-card inner-card-body">
-                                          <Accordion>
-                                            <Card>
-                                              <Card.Header>
-                                                <Accordion.Toggle
-                                                  className="d-flex align-items-center search-project-card-head"
-                                                  variant="link"
-                                                >
-                                                  <ul className="search-playllist-content">
-                                                    <li className={"active-li"}>
-                                                      <div className="search-playlist-title">
-                                                        <img
-                                                          src={ReadBook}
-                                                          alt="image"
-                                                        />
-                                                        <h3 className="playlist-title playlist-inner-title">
-                                                          Chapter 2: What is
-                                                          Java?
-                                                        </h3>
-                                                      </div>
-                                                      <div className="contentbox">
-                                                        <Dropdown className="playlist-dropdown check show dropdown">
-                                                          <Dropdown.Toggle>
-                                                            <img
-                                                              src={Elipsis}
-                                                              alt="elipsis"
-                                                            />
-                                                          </Dropdown.Toggle>
-                                                          <Dropdown.Menu>
-                                                            <>
-                                                              <Dropdown.Item>
-                                                                {/* <a href={``} target="_blank"> */}
-                                                                <div className="dropDown-item-name-icon">
-                                                                  <PreviewSm
-                                                                  // primaryColor={
-                                                                  //   primaryColor
-                                                                  // }
-                                                                  />
-                                                                  <span>
-                                                                    Preview
-                                                                  </span>
-                                                                </div>
-                                                                {/* </a> */}
-                                                              </Dropdown.Item>
-                                                              <Dropdown.Item>
-                                                                <div className="dropDown-item-name-icon">
-                                                                  <PlusSm
-                                                                  // primaryColor={
-                                                                  //   primaryColor
-                                                                  // }
-                                                                  />
-                                                                  <span>
-                                                                    Add to LMS
-                                                                  </span>
-                                                                </div>
-                                                              </Dropdown.Item>
-                                                            </>
-                                                          </Dropdown.Menu>
-                                                        </Dropdown>
-                                                      </div>
-                                                    </li>
-                                                  </ul>
-                                                </Accordion.Toggle>
-                                              </Card.Header>
-                                            </Card>
-                                          </Accordion>
-                                        </Card.Body>
-                                      </Accordion.Collapse>
-                                    </Card>
-                                  </Accordion>
-                                </Card.Body>
-                              </Accordion.Collapse>
-                            </Card>
-                          </Card>
-                        </Accordion>
-                      </Card.Body>
-                    </Accordion.Collapse>
-                  </Card>
-                  <Card>
-                    <Accordion.Collapse eventKey={i + 1}>
-                      <Card.Body className="playlist-card">
-                        <Accordion>
-                          <Card>
-                            {/* inner book 2*/}
-                            <Card.Header>
-                              <Accordion.Toggle
-                                className="d-flex align-items-center search-project-card-head"
-                                variant="link"
-                                eventKey="2"
-                              >
-                                <ul className="search-playllist-content">
-                                  <li className={"active-li"}>
-                                    <div className="search-playlist-title">
-                                      <img src={ReadBook} alt="image" />
-                                      <h3 className="playlist-title">
-                                        Book 2: All About Java
-                                      </h3>
-                                      <div className="view-btn-box">
-                                        <div className="view-unit-box">
-                                          <button className="unit-btn">
-                                            View Units
-                                          </button>
-                                          <img src={RightArow} alt="arrow" />
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div className="contentbox">
-                                      <Dropdown className="playlist-dropdown check show dropdown">
-                                        <Dropdown.Toggle>
-                                          <img src={Elipsis} alt="elipsis" />
-                                        </Dropdown.Toggle>
-                                        <Dropdown.Menu>
-                                          <>
-                                            <Dropdown.Item>
-                                              {/* <a href={``} target="_blank"> */}
-                                              <div className="dropDown-item-name-icon">
-                                                <PreviewSm
-                                                // primaryColor={primaryColor}
-                                                />
-                                                <span>Preview</span>
-                                              </div>
-                                              {/* </a> */}
-                                            </Dropdown.Item>
-                                            <Dropdown.Item>
-                                              <div className="dropDown-item-name-icon">
-                                                <PlusSm
-                                                // primaryColor={primaryColor}
-                                                />
-                                                <span>Add to LMS</span>
-                                              </div>
-                                            </Dropdown.Item>
-                                          </>
-                                        </Dropdown.Menu>
-                                      </Dropdown>
-                                    </div>
-                                  </li>
-                                </ul>
-                              </Accordion.Toggle>
-                            </Card.Header>
-                            {/* inner unit 1 */}
-                            <Card>
-                              <Accordion.Collapse eventKey="2">
-                                <Card.Body className="playlist-card inner-card-body">
-                                  <Accordion>
-                                    <Card>
-                                      {/* inner unit card header */}
-                                      <Card.Header>
-                                        <Accordion.Toggle
-                                          className="d-flex align-items-center search-project-card-head"
-                                          variant="link"
-                                          eventKey="3"
-                                        >
-                                          <ul className="search-playllist-content">
-                                            <li className={"active-li"}>
-                                              <div className="search-playlist-title">
-                                                <img
-                                                  src={ReadBook}
-                                                  alt="image"
-                                                />
-                                                <h3 className="playlist-title playlist-inner-title">
-                                                  Unit 1: What You can do With
-                                                  java
-                                                </h3>
-                                                <div className="view-btn-box ch-box">
-                                                  <div className="view-unit-box">
-                                                    <button className="unit-btn">
-                                                      View Chapters
-                                                    </button>
-                                                    <img
-                                                      src={RightArow}
-                                                      alt="arrow"
-                                                    />
-                                                  </div>
-                                                </div>
-                                              </div>
-                                              <div className="contentbox">
-                                                <Dropdown className="playlist-dropdown check show dropdown">
-                                                  <Dropdown.Toggle>
-                                                    <img
-                                                      src={Elipsis}
-                                                      alt="elipsis"
-                                                    />
-                                                  </Dropdown.Toggle>
-                                                  <Dropdown.Menu>
-                                                    <>
-                                                      <Dropdown.Item>
-                                                        {/* <a href={``} target="_blank"> */}
-                                                        <div className="dropDown-item-name-icon">
-                                                          <PreviewSm
-                                                          // primaryColor={
-                                                          //   primaryColor
-                                                          // }
-                                                          />
-                                                          <span>Preview</span>
-                                                        </div>
-                                                        {/* </a> */}
-                                                      </Dropdown.Item>
-                                                      <Dropdown.Item>
-                                                        <div className="dropDown-item-name-icon">
-                                                          <PlusSm
-                                                          // primaryColor={
-                                                          //   primaryColor
-                                                          // }
-                                                          />
-                                                          <span>
-                                                            Add to LMS
-                                                          </span>
-                                                        </div>
-                                                      </Dropdown.Item>
-                                                    </>
-                                                  </Dropdown.Menu>
-                                                </Dropdown>
-                                              </div>
-                                            </li>
-                                          </ul>
-                                        </Accordion.Toggle>
-                                      </Card.Header>
-                                      {/* inner chapter card body */}
-                                      <Accordion.Collapse eventKey="3">
-                                        <Card.Body className="playlist-card inner-card-body">
-                                          <Accordion>
-                                            <Card>
-                                              <Card.Header>
-                                                <Accordion.Toggle
-                                                  className="d-flex align-items-center search-project-card-head"
-                                                  variant="link"
-                                                >
-                                                  <ul className="search-playllist-content">
-                                                    <li className={"active-li"}>
-                                                      <div className="search-playlist-title">
-                                                        <img
-                                                          src={ReadBook}
-                                                          alt="image"
-                                                        />
-                                                        <h3 className="playlist-title playlist-inner-title">
-                                                          Chapter 1: What is
-                                                          Java?
-                                                        </h3>
-                                                      </div>
-                                                      <div className="contentbox">
-                                                        <Dropdown className="playlist-dropdown check show dropdown">
-                                                          <Dropdown.Toggle>
-                                                            <img
-                                                              src={Elipsis}
-                                                              alt="elipsis"
-                                                            />
-                                                          </Dropdown.Toggle>
-                                                          <Dropdown.Menu>
-                                                            <>
-                                                              <Dropdown.Item>
-                                                                {/* <a href={``} target="_blank"> */}
-                                                                <div className="dropDown-item-name-icon">
-                                                                  <PreviewSm
-                                                                  // primaryColor={
-                                                                  //   primaryColor
-                                                                  // }
-                                                                  />
-                                                                  <span>
-                                                                    Preview
-                                                                  </span>
-                                                                </div>
-                                                                {/* </a> */}
-                                                              </Dropdown.Item>
-                                                              <Dropdown.Item>
-                                                                <div className="dropDown-item-name-icon">
-                                                                  <PlusSm
-                                                                  // primaryColor={
-                                                                  //   primaryColor
-                                                                  // }
-                                                                  />
-                                                                  <span>
-                                                                    Add to LMS
-                                                                  </span>
-                                                                </div>
-                                                              </Dropdown.Item>
-                                                            </>
-                                                          </Dropdown.Menu>
-                                                        </Dropdown>
-                                                      </div>
-                                                    </li>
-                                                  </ul>
-                                                </Accordion.Toggle>
-                                              </Card.Header>
-                                            </Card>
-                                          </Accordion>
-                                        </Card.Body>
-                                      </Accordion.Collapse>
-                                    </Card>
-                                  </Accordion>
-                                </Card.Body>
-                              </Accordion.Collapse>
-                            </Card>
-                            {/* inner unit 1 */}
-                            <Card>
-                              <Accordion.Collapse eventKey="2">
-                                <Card.Body className="playlist-card inner-card-body">
-                                  <Accordion>
-                                    <Card>
-                                      {/* inner unit card header */}
-                                      <Card.Header>
-                                        <Accordion.Toggle
-                                          className="d-flex align-items-center search-project-card-head"
-                                          variant="link"
-                                          eventKey="3"
-                                        >
-                                          <ul className="search-playllist-content">
-                                            <li className={"active-li"}>
-                                              <div className="search-playlist-title">
-                                                <img
-                                                  src={ReadBook}
-                                                  alt="image"
-                                                />
-                                                <h3 className="playlist-title playlist-inner-title">
-                                                  Unit 2: What You can do With
-                                                  java
-                                                </h3>
-                                                <div className="view-btn-box ch-box">
-                                                  <div className="view-unit-box">
-                                                    <button className="unit-btn">
-                                                      View Chapters
-                                                    </button>
-                                                    <img
-                                                      src={RightArow}
-                                                      alt="arrow"
-                                                    />
-                                                  </div>
-                                                </div>
-                                              </div>
-                                              <div className="contentbox">
-                                                <Dropdown className="playlist-dropdown check show dropdown">
-                                                  <Dropdown.Toggle>
-                                                    <img
-                                                      src={Elipsis}
-                                                      alt="elipsis"
-                                                    />
-                                                  </Dropdown.Toggle>
-                                                  <Dropdown.Menu>
-                                                    <>
-                                                      <Dropdown.Item>
-                                                        {/* <a href={``} target="_blank"> */}
-                                                        <div className="dropDown-item-name-icon">
-                                                          <PreviewSm
-                                                          // primaryColor={
-                                                          //   primaryColor
-                                                          // }
-                                                          />
-                                                          <span>Preview</span>
-                                                        </div>
-                                                        {/* </a> */}
-                                                      </Dropdown.Item>
-                                                      <Dropdown.Item>
-                                                        <div className="dropDown-item-name-icon">
-                                                          <PlusSm
-                                                          // primaryColor={
-                                                          //   primaryColor
-                                                          // }
-                                                          />
-                                                          <span>
-                                                            Add to LMS
-                                                          </span>
-                                                        </div>
-                                                      </Dropdown.Item>
-                                                    </>
-                                                  </Dropdown.Menu>
-                                                </Dropdown>
-                                              </div>
-                                            </li>
-                                          </ul>
-                                        </Accordion.Toggle>
-                                      </Card.Header>
-                                      {/* inner chapter card body */}
-                                      <Accordion.Collapse eventKey="3">
-                                        <Card.Body className="playlist-card inner-card-body">
-                                          <Accordion>
-                                            <Card>
-                                              <Card.Header>
-                                                <Accordion.Toggle
-                                                  className="d-flex align-items-center search-project-card-head"
-                                                  variant="link"
-                                                >
-                                                  <ul className="search-playllist-content">
-                                                    <li className={"active-li"}>
-                                                      <div className="search-playlist-title">
-                                                        <img
-                                                          src={ReadBook}
-                                                          alt="image"
-                                                        />
-                                                        <h3 className="playlist-title playlist-inner-title">
-                                                          Chapter 2: What is
-                                                          Java?
-                                                        </h3>
-                                                      </div>
-                                                      <div className="contentbox">
-                                                        <Dropdown className="playlist-dropdown check show dropdown">
-                                                          <Dropdown.Toggle>
-                                                            <img
-                                                              src={Elipsis}
-                                                              alt="elipsis"
-                                                            />
-                                                          </Dropdown.Toggle>
-                                                          <Dropdown.Menu>
-                                                            <>
-                                                              <Dropdown.Item>
-                                                                {/* <a href={``} target="_blank"> */}
-                                                                <div className="dropDown-item-name-icon">
-                                                                  <PreviewSm
-                                                                  // primaryColor={
-                                                                  //   primaryColor
-                                                                  // }
-                                                                  />
-                                                                  <span>
-                                                                    Preview
-                                                                  </span>
-                                                                </div>
-                                                                {/* </a> */}
-                                                              </Dropdown.Item>
-                                                              <Dropdown.Item>
-                                                                <div className="dropDown-item-name-icon">
-                                                                  <PlusSm
-                                                                  // primaryColor={
-                                                                  //   primaryColor
-                                                                  // }
-                                                                  />
-                                                                  <span>
-                                                                    Add to LMS
-                                                                  </span>
-                                                                </div>
-                                                              </Dropdown.Item>
-                                                            </>
-                                                          </Dropdown.Menu>
-                                                        </Dropdown>
-                                                      </div>
-                                                    </li>
-                                                  </ul>
-                                                </Accordion.Toggle>
-                                              </Card.Header>
-                                            </Card>
-                                          </Accordion>
-                                        </Card.Body>
-                                      </Accordion.Collapse>
-                                    </Card>
-                                  </Accordion>
-                                </Card.Body>
-                              </Accordion.Collapse>
-                            </Card>
-                          </Card>
+                          {item?.breadcrumb?.itemListElement?.map(
+                            (itemList, index) => (
+                              <Card key={index}>
+                                {/* View Book */}
+                                <ViewBook index={index} itemList={itemList} />
+                                <Card>
+                                  <Accordion.Collapse eventKey={index + 1}>
+                                    <Card.Body className="playlist-card inner-card-body">
+                                      <Accordion>
+                                        <Card>
+                                          {/* View Unit */}
+                                          <ViewUnit
+                                            index={index}
+                                            itemList={itemList}
+                                          />
+                                          <Accordion.Collapse
+                                            eventKey={index + 1}
+                                          >
+                                            <Card.Body className="playlist-card inner-card-body">
+                                              <Accordion>
+                                                {/* View Chapter */}
+                                                <ViewChapter item={item} />
+                                              </Accordion>
+                                            </Card.Body>
+                                          </Accordion.Collapse>
+                                        </Card>
+                                      </Accordion>
+                                    </Card.Body>
+                                  </Accordion.Collapse>
+                                </Card>
+                              </Card>
+                            ),
+                          )}
                         </Accordion>
                       </Card.Body>
                     </Accordion.Collapse>
                   </Card>
                 </Card>
               ))}
-              {filteredData.length > 0 && startSearching && (
-                <a href="javascript:void(0)" className="seeMore-link">
-                  See more
-                </a>
+              {visibleItems > filteredData.length && (
+                <button className="seeMore-link" onClick={handleSeeMoreLess}>
+                  {visibleItems !== filteredData.length
+                    ? 'See more'
+                    : 'See Less'}
+                </button>
               )}
             </Accordion>
           ) : (
-            <Alert variant={"warning"} style={{ margin: "0" }}>
+            <Alert variant={'warning'} style={{ margin: '0' }}>
               No collection found
             </Alert>
           )}
         </div>
       </div>
     </div>
-  );
-};
-export default Index;
+  )
+}
+export default Index
