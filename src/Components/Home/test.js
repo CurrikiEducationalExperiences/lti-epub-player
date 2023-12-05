@@ -13,10 +13,15 @@ import Elipsis from "../../assets/images/elipsis.svg";
 import PreviewSm from "../../assets/images/PreviewSmSvg";
 import PlusSm from "../../assets/images/PlusSmSvg";
 import searchIcon from "../../assets/images/search.svg";
-
+import { Link } from "react-router-dom";
 import "./style.scss";
 import "./project.scss";
-const url = new URL("https://c2e-services.curriki.org/licenses");
+
+const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwbGF0Zm9ybVVybCI6Imh0dHBzOi8vY2FudmFzLmluc3RydWN0dXJlLmNvbSIsImNsaWVudElkIjoiMjA4ODMwMDAwMDAwMDAwMTM4IiwiZGVwbG95bWVudElkIjoiMTU3OmE1MTJjY2Y0ZGE4NTFlMzA1MjZmYTJlZWEyZjEyN2I1YjA0MmQ1N2QiLCJwbGF0Zm9ybUNvZGUiOiJsdGlhSFIwY0hNNkx5OWpZVzUyWVhNdWFXNXpkSEoxWTNSMWNtVXVZMjl0TWpBNE9ETXdNREF3TURBd01EQXdNVE00TVRVM09tRTFNVEpqWTJZMFpHRTROVEZsTXpBMU1qWm1ZVEpsWldFeVpqRXlOMkkxWWpBME1tUTFOMlElM0QiLCJjb250ZXh0SWQiOiJodHRwcyUzQSUyRiUyRmNhbnZhcy5pbnN0cnVjdHVyZS5jb20yMDg4MzAwMDAwMDAwMDAxMzgxNTclM0FhNTEyY2NmNGRhODUxZTMwNTI2ZmEyZWVhMmYxMjdiNWIwNDJkNTdkYTE2NGM4YTMzYzljZmNjODQxM2I4YjA5ZWQ5N2E3MjU0MDhiMDI2OV8zZWY2MTI1OS0wODAyLTRmMjYtYTEyMC0yYTI0MDg2NDllNTUiLCJ1c2VyIjoiY2ZmZGU0NmQtODY5Zi00MzJhLTg1ZDQtYzZhZmQ1YWZhOTJiIiwicyI6IjMzNjJmZmIzNjVjYmY2NDNmYzljMDg5Y2ZjNGQ1ZmQzNjI5NTBjZjg3Zjg0ZjhhYmI3IiwiaWF0IjoxNzAxNzgyODYxfQ.IdHPAFxTq-BsjMK5DKXbHlYV30EyXRpl3HbiSvRKGc0`;
+const headers = {
+  Authorization: `Bearer ${token}`,
+  "Content-Type": "application/json", // Modify content type if needed
+};
 
 function findNodeByName(root, name) {
   let queue = [root];
@@ -47,23 +52,27 @@ const Index = () => {
   const [showdetail, setshowdetail] = useState("");
   const searchCollection = () => {
     setloading(true);
+    const url = new URL("https://c2e-player-service.curriki.org/resources");
     const params = {
       page: 1,
       limit: 10,
-      query: startSearching || "",
-      email: "katyisd@curriki.org",
-      secret:
-        "380beb2f50af32dc3890c138122c710314d6ff75eb6d7ee88130ec7de7371a76",
+      // query: startSearching || "",
+      // email: "katyisd@curriki.org",
+      // secret:
+      //   "380beb2f50af32dc3890c138122c710314d6ff75eb6d7ee88130ec7de7371a76",
     };
 
     // Constructing the URL with query parameters
 
-    Object.keys(params).forEach((key) =>
-      url.searchParams.append(key, params[key])
-    );
+    // Object.keys(params).forEach((key) =>
+    //   url.searchParams.append(key, params[key])
+    // );
 
     // Making a GET fetch request
-    fetch(url)
+    fetch(url, {
+      method: "GET", // Change the method if you're using a different HTTP method
+      headers: headers,
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -130,6 +139,30 @@ const Index = () => {
   useEffect(() => {
     searchCollection();
   }, [showdetail]);
+
+  const getC2E = (id) => {
+    fetch(`https://c2e-services.curriki.org/c2e/${id}`).then((response) => {
+      response.arrayBuffer().then(async (data) => {
+        const blob = new Blob([data], {
+          type: "application/octet-stream",
+        });
+        // try {
+        //   const loadzip = await JSZip.loadAsync(blob);
+
+        //   loadzip.forEach(async (relativePath, zipEntry) => {
+        //     if (zipEntry.name.includes(".html")) {
+        //       setJSlipParser(loadzip);
+        //     } else if (zipEntry.name.includes(".c2e")) {
+        //       const loadzip1 = await JSZip.loadAsync(zipEntry.async("blob"));
+        //       setJSlipParser(loadzip1);
+        //     }
+        //   });
+        // } catch (e) {
+        //   setError(true);
+        // }
+      });
+    });
+  };
 
   return (
     <div className="content-wrapper content-wrapper-project small-grid">
@@ -246,28 +279,49 @@ const Index = () => {
                 </div>
               </div>
 
-              <div className="contentbox dropdown-contentbox">
-                <Dropdown className="playlist-dropdown check show dropdown">
-                  <Dropdown.Toggle>
-                    <img src={Elipsis} alt="elipsis" />
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <>
-                      <Dropdown.Item>
-                        <div className="dropDown-item-name-icon">
-                          <PreviewSm />
-                          <span>Preview</span>
-                        </div>
-                      </Dropdown.Item>
-                      <Dropdown.Item>
-                        <div className="dropDown-item-name-icon">
-                          <PlusSm />
-                          <span>Add to LMS</span>
-                        </div>
-                      </Dropdown.Item>
-                    </>
-                  </Dropdown.Menu>
-                </Dropdown>
+              <div className="flexer">
+                <button>
+                  <Link to={`/play?c2eId=${showdetail.id}`}>Preview</Link>
+                </button>
+                <button
+                  onClick={async () => {
+                    const getLtik = () => {
+                      const searchParams = new URLSearchParams(
+                        window.location.search
+                      );
+                      const ltik = searchParams.get("ltik");
+
+                      return ltik;
+                    };
+
+                    const requestOptions = {
+                      method: "POST",
+                      credentials: "include",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + getLtik(),
+                      },
+                      body: JSON.stringify({
+                        id: showdetail.id,
+                      }),
+                    };
+
+                    fetch("/deeplink", requestOptions)
+                      .then((response) => response.text())
+                      .then((form) => {
+                        document
+                          .querySelector("body")
+                          .insertAdjacentHTML("beforeend", form);
+
+                        setTimeout(() => {
+                          document.getElementById("ltijs_submit").submit();
+                        }, [1500]);
+                      })
+                      .catch((error) => console.error("Error:", error));
+                  }}
+                >
+                  Add to LMS
+                </button>
               </div>
             </div>
             <div className="box">
@@ -331,29 +385,6 @@ const Index = () => {
 export default Index;
 
 const F = ({ data, allDataRaw }) => {
-  const getC2E = (id) => {
-    fetch(`https://c2e-services.curriki.org/c2e/${id}`).then((response) => {
-      response.arrayBuffer().then(async (data) => {
-        const blob = new Blob([data], {
-          type: "application/octet-stream",
-        });
-        // try {
-        //   const loadzip = await JSZip.loadAsync(blob);
-
-        //   loadzip.forEach(async (relativePath, zipEntry) => {
-        //     if (zipEntry.name.includes(".html")) {
-        //       setJSlipParser(loadzip);
-        //     } else if (zipEntry.name.includes(".c2e")) {
-        //       const loadzip1 = await JSZip.loadAsync(zipEntry.async("blob"));
-        //       setJSlipParser(loadzip1);
-        //     }
-        //   });
-        // } catch (e) {
-        //   setError(true);
-        // }
-      });
-    });
-  };
   const meta = allDataRaw?.filter((row) => row.title === data.name)?.[0];
   console.log(meta);
   return (
@@ -388,12 +419,10 @@ const F = ({ data, allDataRaw }) => {
                               </p>
                             </div>
                             <div className="flexer">
-                              <button
-                                onClick={() => {
-                                  getC2E(meta.id);
-                                }}
-                              >
-                                Preview
+                              <button>
+                                <Link to={`/play?c2eId=${meta.id}`}>
+                                  Preview
+                                </Link>
                               </button>
                               <button
                                 onClick={async () => {
