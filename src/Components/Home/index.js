@@ -11,8 +11,7 @@ import searchIcon from "../../assets/images/search.svg";
 import { Link } from "react-router-dom";
 import "./style.scss";
 import "./project.scss";
-
-// const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwbGF0Zm9ybVVybCI6Imh0dHBzOi8vY2FudmFzLmluc3RydWN0dXJlLmNvbSIsImNsaWVudElkIjoiMjA4ODMwMDAwMDAwMDAwMTM4IiwiZGVwbG95bWVudElkIjoiMTU3OmE1MTJjY2Y0ZGE4NTFlMzA1MjZmYTJlZWEyZjEyN2I1YjA0MmQ1N2QiLCJwbGF0Zm9ybUNvZGUiOiJsdGlhSFIwY0hNNkx5OWpZVzUyWVhNdWFXNXpkSEoxWTNSMWNtVXVZMjl0TWpBNE9ETXdNREF3TURBd01EQXdNVE00TVRVM09tRTFNVEpqWTJZMFpHRTROVEZsTXpBMU1qWm1ZVEpsWldFeVpqRXlOMkkxWWpBME1tUTFOMlElM0QiLCJjb250ZXh0SWQiOiJodHRwcyUzQSUyRiUyRmNhbnZhcy5pbnN0cnVjdHVyZS5jb20yMDg4MzAwMDAwMDAwMDAxMzgxNTclM0FhNTEyY2NmNGRhODUxZTMwNTI2ZmEyZWVhMmYxMjdiNWIwNDJkNTdkYTE2NGM4YTMzYzljZmNjODQxM2I4YjA5ZWQ5N2E3MjU0MDhiMDI2OV8zZWY2MTI1OS0wODAyLTRmMjYtYTEyMC0yYTI0MDg2NDllNTUiLCJ1c2VyIjoiY2ZmZGU0NmQtODY5Zi00MzJhLTg1ZDQtYzZhZmQ1YWZhOTJiIiwicyI6IjMzNjJmZmIzNjVjYmY2NDNmYzljMDg5Y2ZjNGQ1ZmQzNjI5NTBjZjg3Zjg0ZjhhYmI3IiwiaWF0IjoxNzAxNzgyODYxfQ.IdHPAFxTq-BsjMK5DKXbHlYV30EyXRpl3HbiSvRKGc0`;
+const tokenDummy = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwbGF0Zm9ybVVybCI6Imh0dHBzOi8vY2FudmFzLmluc3RydWN0dXJlLmNvbSIsImNsaWVudElkIjoiMjA4ODMwMDAwMDAwMDAwMTM4IiwiZGVwbG95bWVudElkIjoiMTU3OmE1MTJjY2Y0ZGE4NTFlMzA1MjZmYTJlZWEyZjEyN2I1YjA0MmQ1N2QiLCJwbGF0Zm9ybUNvZGUiOiJsdGlhSFIwY0hNNkx5OWpZVzUyWVhNdWFXNXpkSEoxWTNSMWNtVXVZMjl0TWpBNE9ETXdNREF3TURBd01EQXdNVE00TVRVM09tRTFNVEpqWTJZMFpHRTROVEZsTXpBMU1qWm1ZVEpsWldFeVpqRXlOMkkxWWpBME1tUTFOMlElM0QiLCJjb250ZXh0SWQiOiJodHRwcyUzQSUyRiUyRmNhbnZhcy5pbnN0cnVjdHVyZS5jb20yMDg4MzAwMDAwMDAwMDAxMzgxNTclM0FhNTEyY2NmNGRhODUxZTMwNTI2ZmEyZWVhMmYxMjdiNWIwNDJkNTdkYTE2NGM4YTMzYzljZmNjODQxM2I4YjA5ZWQ5N2E3MjU0MDhiMDI2OV9ORiIsInVzZXIiOiJjZmZkZTQ2ZC04NjlmLTQzMmEtODVkNC1jNmFmZDVhZmE5MmIiLCJzIjoiMzVkMWFlZTQxNGZkYmYwOTIzODU0Y2Q5ZGUwNWQ2OGM0NzJmY2MwYmQ3ZTM3NjIxODMiLCJpYXQiOjE3MDE4ODMxOTB9.2tTIP6VlLSFxBbtXUB_IjJl2M3YsqqtleFNfl0KccCI`;
 
 function findNodeByName(root, name) {
   let queue = [root];
@@ -47,26 +46,23 @@ const Index = () => {
   const searchCollection = () => {
     setloading(true);
     const url = new URL("https://c2e-player-service.curriki.org/resources");
-    // const params = {
-    //   page: 1,
-    //   limit: 10,
-    //   // query: startSearching || "",
-    //   // email: "katyisd@curriki.org",
-    //   // secret:
-    //   //   "380beb2f50af32dc3890c138122c710314d6ff75eb6d7ee88130ec7de7371a76",
-    // };
+    const params = {
+      page: 1,
+      limit: 10,
+      query: startSearching || "",
+    };
 
-    // Constructing the URL with query parameters
+    //Constructing the URL with query parameters
 
-    // Object.keys(params).forEach((key) =>
-    //   url.searchParams.append(key, params[key])
-    // );
+    Object.keys(params).forEach((key) =>
+      url.searchParams.append(key, params[key])
+    );
 
     // Making a GET fetch request
     fetch(url, {
       method: "GET", // Change the method if you're using a different HTTP method
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token || tokenDummy}`,
         "Content-Type": "application/json", // Modify content type if needed
       },
     })
@@ -78,9 +74,9 @@ const Index = () => {
       })
       .then((data) => {
         // Handle the fetched data here
-        console.log(data);
+
         if (startSearching) {
-          setallCollection(data?.data);
+          setallCollection(sortSearch(data?.data));
         }
         setAllDataRaw(data?.data);
         getFinalTree(data?.data);
@@ -130,7 +126,7 @@ const Index = () => {
       parent.children.push(leaf); // Finally, insert the leaf node
     }
     console.log("Final Tree: ", tree);
-    setAlldata(tree);
+    setAlldata(sortJsonByName(tree));
   };
 
   useEffect(() => {
@@ -210,12 +206,26 @@ const Index = () => {
                       setshowdetail(collection);
                     }}
                   >
-                    <img className="imgbox" src={CardImg} alt="img" />
                     <div className="contentbox">
                       <div className="inner_content">
                         <h3 className={"content_heading view_content_heading"}>
                           {collection?.title}
                         </h3>
+                        <ul>
+                          {collection.breadcrumb?.itemListElement?.map(
+                            (data, index) => {
+                              return (
+                                <li>
+                                  {data.item?.name}
+                                  {index !==
+                                    collection.breadcrumb?.itemListElement
+                                      ?.length -
+                                      1 && <span>&gt;</span>}
+                                </li>
+                              );
+                            }
+                          )}
+                        </ul>
                         <p className="cotent-text text-start">{`${collection?.description.slice(
                           0,
                           150
@@ -233,7 +243,7 @@ const Index = () => {
         {showdetail?.id ? (
           <div className="results_filter">
             <div className="box">
-              <img className="imgbox" src={Book} alt="img" />
+              {/* <img className="imgbox" src={Book} alt="img" /> */}
               <div className="contentbox" style={{ width: "200%" }}>
                 <div className="inner_content">
                   <h3 className={"content_heading view_content_heading"}>
@@ -293,7 +303,7 @@ const Index = () => {
                       .catch((error) => console.error("Error:", error));
                   }}
                 >
-                  Add to LMS
+                  Add
                 </button>
               </div>
             </div>
@@ -359,7 +369,7 @@ export default Index;
 
 const F = ({ data, allDataRaw }) => {
   const meta = allDataRaw?.filter((row) => row.title === data.name)?.[0];
-  console.log(meta);
+
   return (
     <div className="tab-content book-accordion">
       <Accordion defaultActiveKey="0" className="book-acc">
@@ -372,7 +382,7 @@ const F = ({ data, allDataRaw }) => {
             >
               <div className="results_filter">
                 <div className="box">
-                  <img className="imgbox" src={CardImg} alt="img" />
+                  {/* <img className="imgbox" src={CardImg} alt="img" /> */}
                   <div className="contentbox">
                     <div className="inner_content">
                       <h3 className={"content_heading view_content_heading"}>
@@ -438,7 +448,7 @@ const F = ({ data, allDataRaw }) => {
                                     );
                                 }}
                               >
-                                Add to LMS
+                                Add
                               </button>
                             </div>
                           </div>
@@ -479,3 +489,23 @@ const F = ({ data, allDataRaw }) => {
     </div>
   );
 };
+
+function sortJsonByName(obj) {
+  if (Array.isArray(obj)) {
+    return obj.map(sortJsonByName).sort((a, b) => a.name.localeCompare(b.name));
+  } else if (typeof obj === "object" && obj !== null) {
+    const sortedObj = {};
+    Object.keys(obj)
+      .sort()
+      .forEach((key) => {
+        sortedObj[key] = sortJsonByName(obj[key]);
+      });
+    return sortedObj;
+  }
+  console.log(obj);
+  return obj;
+}
+
+function sortSearch(obj) {
+  return obj.sort((a, b) => a.title.localeCompare(b.title));
+}
