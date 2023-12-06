@@ -264,7 +264,9 @@ const Index = () => {
 
               <div className="flexer">
                 <button>
-                  <Link to={`/play?c2eId=${showdetail.id}`}>Preview</Link>
+                  <Link to={`/play?c2eId=${showdetail.id}&ltik=${token}`}>
+                    Preview
+                  </Link>
                 </button>
                 <button
                   onClick={async () => {
