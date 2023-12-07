@@ -204,10 +204,13 @@ const Epub = () => {
                   var tincan = new contents.window.TinCan({
                     recordStores: [
                       {
-                        endpoint: "https://c2e-trax.curriki.org/trax/ws/xapi",
+                        endpoint: "https://c2e-player-service.curriki.org/xapi",
                         username: "9491dfe3-fd45-4bb8-b9d5-3480bcddd780",
                         password: "8a290a3a-ff9b-4d5c-a4e9-96550d85b393",
                         allowFail: false,
+                        headers: {
+                          Authorization: `Bearer ${param2 || tokenDummy}`,
+                        },
                       },
                     ],
                   });
