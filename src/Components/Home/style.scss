@@ -68,6 +68,8 @@
 
         .results_filter {
           .box {
+            flex: 2;
+
             min-height: 60px !important;
             &:hover {
               background-color: #ddd;
@@ -111,9 +113,35 @@
     cursor: pointer;
   }
   .results_filter {
-    width: 100%;
-    .box {
+    .arrow {
+      width: 20px;
+      background: #fff;
+      .up_arrow {
+        transform: rotate(-180deg);
+      }
+      img {
+        transition: transform 0.4s ease-in-out 0s;
+      }
+    }
+    .item_breadcrumb_details {
       display: flex;
+      align-items: flex-start;
+      .item_box {
+        border-bottom: none !important;
+        justify-content: flex-start;
+        span {
+          min-height: 96px;
+          @media screen and (max-width: 768px) {
+            display: none;
+          }
+        }
+      }
+      @media screen and (max-width: 768px) {
+        flex-direction: column;
+      }
+    }
+    .box {
+      flex: 2;
       padding: 12px;
       gap: 16px;
       align-items: flex-start;
@@ -211,6 +239,14 @@
           }
         }
       }
+      .dropdown_contentbox_btns {
+        justify-content: end;
+      }
+      .dropdown_contentbox_btns_details {
+        @media screen and (max-width: 480px) {
+          width: max-content;
+        }
+      }
       .btn-box {
         width: 100%;
         max-width: 114px;
@@ -242,6 +278,19 @@
         justify-content: end;
       }
     }
+    .details_box {
+      gap: 5px;
+    }
+    .view_content_heading {
+      font-size: 18px;
+      font-style: normal;
+      line-height: 24px;
+    }
+  }
+  .main_accordion_filter {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
   }
   // Accordion
   .tab-content {
@@ -272,7 +321,14 @@
           margin-bottom: 10px;
         }
         .playlist-card {
-          padding: 0px 30px !important;
+          &:first-child {
+            padding: 0px 30px !important;
+            @media screen and (max-width: 480px) {
+              &:nth-last-of-type(n + 1) {
+                padding: 0 8px 30px 8px !important;
+              }
+            }
+          }
         }
         .inner-card-body {
           padding: 0 0 0 82px;
@@ -513,7 +569,16 @@
         color: #fff;
       }
     }
-
+    .chapter_flexer {
+      width: 100%;
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0px;
+      .cotent-text {
+        display: flex;
+        gap: 3px;
+      }
+    }
     p {
       margin: 0 !important;
     }
@@ -525,6 +590,38 @@
       border-radius: 4px;
       background-color: #084892;
       color: #fff;
+    }
+  }
+  .details_content-pdf-box {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0px !important;
+    .content_details {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      @media screen and (max-width: 480px) {
+        gap: 1px;
+      }
+      .cotent-text {
+        font-weight: 500 !important;
+      }
+      .license_text {
+        min-width: 100px;
+      }
+    }
+  }
+  .meta_content-pdf-box {
+    justify-content: flex-start;
+    color: #767676;
+    font-size: 14px;
+    font-style: normal;
+    line-height: 20px;
+    font-weight: 500;
+    @media screen and (max-width: 480px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0px;
     }
   }
 }
@@ -606,16 +703,42 @@
       }
     }
   }
+  .dropDown_btn {
+    color: #084892 !important;
+    padding: 4px 6px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+    border-radius: 4px;
+    box-shadow: none;
+    border: none;
+    &:hover {
+      background: rgba(229, 238, 255, 0.32) !important;
+      border-radius: 4px !important;
+    }
+    &:active {
+      background: rgba(229, 238, 255, 0.32) !important;
+      border-radius: 4px !important;
+    }
+  }
 }
 
 // test accordion
+/* Apply box shadow to the first parent accordion item header */
 .tab-content.book-accordion {
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+  // &:not(:last-child) {
+  margin-bottom: 12px;
+  // }
+  &:not(:first-child) {
+    box-shadow: none !important;
+  }
+
   .book-acc {
     .book-acc-card {
       .acc-card-header {
         padding: 18px 28px 18px 20px !important;
-        // border-bottom: 0 !important;
         outline: none !important;
         border-radius: 0 !important;
         margin-bottom: 0 !important;

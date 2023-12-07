@@ -1,4 +1,4 @@
-@import "../../assets/styles.scss";
+@import '../../assets/styles.scss';
 
 // C-CSS-Start
 .container-fluid {
@@ -402,7 +402,7 @@
     color: #fff !important;
 
     &:after {
-      content: "";
+      content: '';
       position: absolute;
       bottom: -8px;
       left: 50%;
@@ -773,7 +773,7 @@
       padding-left: 16px;
       padding-right: 60px;
 
-      font-family: "Open Sans", sans-serif;
+      font-family: 'Open Sans', sans-serif;
 
       input {
         border: none;
@@ -1113,7 +1113,7 @@
         width: 50%;
         margin-right: 8px;
         span {
-          font-family: "Open sans";
+          font-family: 'Open sans';
           font-style: normal;
           font-weight: normal;
           font-size: 12px;
@@ -1141,7 +1141,7 @@
         flex-direction: column;
         width: 50%;
         span {
-          font-family: "Open sans";
+          font-family: 'Open sans';
           font-style: normal;
           font-weight: normal;
           font-size: 12px;
@@ -1201,7 +1201,7 @@
           span {
             display: flex;
             align-items: center;
-            font-family: "Open Sans";
+            font-family: 'Open Sans';
             font-style: normal;
             font-weight: normal;
             font-size: 14px;
@@ -1225,7 +1225,7 @@
           span {
             display: flex;
             align-items: center;
-            font-family: "Open Sans";
+            font-family: 'Open Sans';
             font-style: normal;
             font-weight: normal;
             font-size: 14px;
