@@ -285,7 +285,9 @@ const Index = () => {
                   <Dropdown.Menu>
                     <>
                       <div className="dropDown-item-name-icon dropDown_btn">
-                        <Link to={`/play?c2eId=${showdetail.id}`}>
+                        <Link
+                          to={`/play?c2eId=${showdetail.id}&ltik=${token}&preview=true`}
+                        >
                           <PreviewSm />
                           <span>Preview</span>
                         </Link>
@@ -394,7 +396,11 @@ const Index = () => {
             )}
           </div>
         ) : (
-          <F data={allData?.children[0]} allDataRaw={allDataRaw} />
+          <F
+            data={allData?.children[0]}
+            allDataRaw={allDataRaw}
+            token={token || tokenDummy}
+          />
         )}
       </div>
     </div>
@@ -402,7 +408,7 @@ const Index = () => {
 }
 export default Index
 
-const F = ({ data, allDataRaw }) => {
+const F = ({ data, allDataRaw, token }) => {
   const meta = allDataRaw?.filter((row) => row.title === data.name)?.[0]
   const [activeArrow, setactiveArrow] = useState([])
 
@@ -457,7 +463,9 @@ const F = ({ data, allDataRaw }) => {
                                 <Dropdown.Menu>
                                   <>
                                     <div className="dropDown-item-name-icon dropDown_btn">
-                                      <Link to={`/play?c2eId=${meta.id}`}>
+                                      <Link
+                                        to={`/play?c2eId=${meta.id}&ltik=${token}&preview=true`}
+                                      >
                                         <PreviewSm />
                                         <span>Preview</span>
                                       </Link>
@@ -552,7 +560,7 @@ const F = ({ data, allDataRaw }) => {
               {data?.children?.map((h) => {
                 return (
                   <div>
-                    <F data={h} allDataRaw={allDataRaw} />
+                    <F data={h} allDataRaw={allDataRaw} token={token} />
                   </div>
                 )
               })}

@@ -170,6 +170,29 @@ const Epub = () => {
 
   return (
     <>
+      {preview && (
+        <Link
+          to={'/'}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            color: '#084892',
+            gap: '5px',
+            height: '25px',
+            width: 'auto',
+            cursor: 'pointer',
+            justifyContent: 'flex-end',
+            margin: '20px 30px 10px 0px',
+          }}
+        >
+          <img
+            style={{ width: '18px', transform: 'rotate(-180deg)' }}
+            src={LeftArrow}
+            alt="arrow"
+          />
+          Back
+        </Link>
+      )}
       <div style={{ display: 'flex', gap: '20px', padding: '30px' }}>
         <div id="reader-container" style={{ height: '100vh', width: '100%' }}>
           <ReactReader
@@ -292,27 +315,6 @@ const Epub = () => {
             }}
           />
         </div>
-        {preview &&
-        <Link
-          to={'/'}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            color: '#084892',
-            gap: '5px',
-            height: '25px',
-            width: 'auto',
-            cursor: 'pointer',
-          }}
-        >
-          <img
-            style={{ width: '18px', transform: 'rotate(-180deg)' }}
-            src={LeftArrow}
-            alt="arrow"
-          />
-          Back
-        </Link>
-}
       </div>
     </>
   )
