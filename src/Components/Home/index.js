@@ -291,7 +291,7 @@ const Index = () => {
                         </Link>
                       </div>
                       <button
-                        className="dropDown-item-name-icon dropDown_btn"
+                        className="dropDown-item-name-icon dropDown_btn add_btn"
                         onClick={async () => {
                           const getLtik = () => {
                             const searchParams = new URLSearchParams(
@@ -329,7 +329,7 @@ const Index = () => {
                         }}
                       >
                         <PlusSm />
-                        <span>Add to LMS</span>
+                        <span>Add</span>
                       </button>
                     </>
                   </Dropdown.Menu>
@@ -463,7 +463,7 @@ const F = ({ data, allDataRaw }) => {
                                       </Link>
                                     </div>
                                     <button
-                                      className="dropDown-item-name-icon dropDown_btn"
+                                      className="dropDown-item-name-icon dropDown_btn add_btn"
                                       onClick={async () => {
                                         const getLtik = () => {
                                           const searchParams =
@@ -510,7 +510,7 @@ const F = ({ data, allDataRaw }) => {
                                       }}
                                     >
                                       <PlusSm />
-                                      <span>Add to LMS</span>
+                                      <span>Add</span>
                                     </button>
                                   </>
                                 </Dropdown.Menu>
