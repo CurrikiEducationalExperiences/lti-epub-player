@@ -156,7 +156,7 @@
       }
       .contentbox {
         margin-top: 0;
-        width: 78%;
+        width: 100%;
         display: flex;
         justify-content: space-between;
         overflow: visible;
@@ -177,7 +177,7 @@
           display: flex;
           flex-direction: column;
           align-items: flex-start;
-
+          width: 100%;
           .content_heading {
             color: #084892;
             text-align: left;
@@ -774,5 +774,12 @@
         gap: 12px;
       }
     }
+  }
+}
+
+@media (max-width: 991px) {
+  .modal-dialog {
+    max-width: 800px !important;
+    margin: 1.75rem auto !important;
   }
 }

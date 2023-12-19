@@ -22,9 +22,9 @@ const ownStyles = {
   },
 };
 
-const tokenDummy = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwbGF0Zm9ybVVybCI6Imh0dHBzOi8vY2FudmFzLmluc3RydWN0dXJlLmNvbSIsImNsaWVudElkIjoiMjA4ODMwMDAwMDAwMDAwMTM4IiwiZGVwbG95bWVudElkIjoiMTU3OmE1MTJjY2Y0ZGE4NTFlMzA1MjZmYTJlZWEyZjEyN2I1YjA0MmQ1N2QiLCJwbGF0Zm9ybUNvZGUiOiJsdGlhSFIwY0hNNkx5OWpZVzUyWVhNdWFXNXpkSEoxWTNSMWNtVXVZMjl0TWpBNE9ETXdNREF3TURBd01EQXdNVE00TVRVM09tRTFNVEpqWTJZMFpHRTROVEZsTXpBMU1qWm1ZVEpsWldFeVpqRXlOMkkxWWpBME1tUTFOMlElM0QiLCJjb250ZXh0SWQiOiJodHRwcyUzQSUyRiUyRmNhbnZhcy5pbnN0cnVjdHVyZS5jb20yMDg4MzAwMDAwMDAwMDAxMzgxNTclM0FhNTEyY2NmNGRhODUxZTMwNTI2ZmEyZWVhMmYxMjdiNWIwNDJkNTdkYTE2NGM4YTMzYzljZmNjODQxM2I4YjA5ZWQ5N2E3MjU0MDhiMDI2OV9ORiIsInVzZXIiOiJjZmZkZTQ2ZC04NjlmLTQzMmEtODVkNC1jNmFmZDVhZmE5MmIiLCJzIjoiY2MzMTUzYmI2NjNjMjRhYmMxNjY4NzNiYzA5ODI4MDg2Y2QxMTg3MjNiNDE0ZWE2Y2MiLCJpYXQiOjE3MDIwNTUzODB9.xDmcSJH6HYP338HYLqOtZ5A7gf6XewOob3EflysblH0`;
+const tokenDummy = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwbGF0Zm9ybVVybCI6Imh0dHBzOi8vY2FudmFzLmluc3RydWN0dXJlLmNvbSIsImNsaWVudElkIjoiMjA4ODMwMDAwMDAwMDAwMTM4IiwiZGVwbG95bWVudElkIjoiMTY0OmE1MTJjY2Y0ZGE4NTFlMzA1MjZmYTJlZWEyZjEyN2I1YjA0MmQ1N2QiLCJwbGF0Zm9ybUNvZGUiOiJsdGlhSFIwY0hNNkx5OWpZVzUyWVhNdWFXNXpkSEoxWTNSMWNtVXVZMjl0TWpBNE9ETXdNREF3TURBd01EQXdNVE00TVRZME9tRTFNVEpqWTJZMFpHRTROVEZsTXpBMU1qWm1ZVEpsWldFeVpqRXlOMkkxWWpBME1tUTFOMlElM0QiLCJjb250ZXh0SWQiOiJodHRwcyUzQSUyRiUyRmNhbnZhcy5pbnN0cnVjdHVyZS5jb20yMDg4MzAwMDAwMDAwMDAxMzgxNjQlM0FhNTEyY2NmNGRhODUxZTMwNTI2ZmEyZWVhMmYxMjdiNWIwNDJkNTdkYTE2NGM4YTMzYzljZmNjODQxM2I4YjA5ZWQ5N2E3MjU0MDhiMDI2OV9ORiIsInVzZXIiOiJjZmZkZTQ2ZC04NjlmLTQzMmEtODVkNC1jNmFmZDVhZmE5MmIiLCJzIjoiNTY4NjRmOTU3NTc3MjBhNzNmMGQ2YjU3NWJiMTQ4MDBjNGVmOTk3OThmYTcxOWE4MjIiLCJpYXQiOjE3MDIzOTk4OTB9.bzzSIxwoNHy0PH-tQ6Yank7ER4796BiFPzpw39JMLBc`;
 
-const Epub = () => {
+const Epub = ({ previewId }) => {
   useEffect(() => {});
   const [activeC2E, setActiveC2e] = useState(false);
   const [c2eResource, setC2eResource] = useState(null);
@@ -51,14 +51,14 @@ const Epub = () => {
   const preview = searchParams.get("preview");
 
   useEffect(() => {
-    if (param1) {
-      getC2E(param1);
+    if (param1 || previewId) {
+      getC2E(param1 || previewId);
     }
-  }, [param1]);
+  }, [param1, previewId]);
 
   const getC2E = async (ceeId) => {
     const userInfo = await fetch(
-      `https://c2e-player-service.curriki.org/info`,
+      process.env.REACT_APP_API_DOMAIN_URL + process.env.REACT_APP_INFO_URL,
       {
         method: "GET",
 
@@ -70,14 +70,19 @@ const Epub = () => {
     );
     const result = await userInfo.json();
     setUserLMS(result);
-    fetch(`https://c2e-player-service.curriki.org/stream?ceeId=${ceeId}`, {
-      method: "GET",
+    fetch(
+      `${
+        process.env.REACT_APP_API_DOMAIN_URL + process.env.REACT_APP_STREAM_URL
+      }?ceeId=${ceeId}`,
+      {
+        method: "GET",
 
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${param2 || tokenDummy}`,
-      },
-    }).then((response) => {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${param2 || tokenDummy}`,
+        },
+      }
+    ).then((response) => {
       response.arrayBuffer().then(async (data) => {
         const blob = new Blob([data], {
           type: "application/octet-stream",
