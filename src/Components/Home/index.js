@@ -46,7 +46,7 @@ const Index = () => {
   const [loading, setloading] = useState(false);
   const [showdetail, setShowdetail] = useState("");
   const [selectedC2e, setSelectedC2e] = useState();
-
+  const [apiError, setApiError] = useState();
   let [searchParams] = useSearchParams();
 
   const token = searchParams.get("ltik");
@@ -77,14 +77,17 @@ const Index = () => {
       },
     })
       .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
+        // console.log(response);
+        // if (!response.ok) {
+        //   throw new Error("Network response was not ok");
+        // }
+
         return response.json();
       })
       .then((data) => {
-        // Handle the fetched data here
-
+        if (data.error) {
+          throw data;
+        }
         if (startSearching) {
           // getFinalTree();
           // setallCollection(sortSearch(data?.data));
@@ -93,9 +96,9 @@ const Index = () => {
         getFinalTree(data?.data);
         setloading(false);
       })
-      .catch((error) => {
-        // Handle errors here
-        console.error("There was a problem with the fetch request:", error);
+      .catch(async (error) => {
+        console.log(error);
+        setApiError(error);
       });
   };
 
@@ -156,21 +159,21 @@ const Index = () => {
       <h2 className="resource_heading">Link Resource from External Tool</h2>
       <div
         className="my-project-cards-top-search-filter search-project-filter "
-        style={{ margin: !!startSearching ? "0" : "0 0 16px" }}
+        style={{ margin: "0 0 16px" }}
       >
         <div
           className="search-project-box"
           style={{
-            width: !!startSearching ? "100%" : "auto",
+            width: !!startSearching ? "100%" : "100%",
             justifyContent: !!startSearching ? "space-between" : "flex-start",
           }}
         >
           <div
             className="search-bar"
-            style={{ width: !!startSearching ? "100%" : "auto" }}
+            style={{ width: !!startSearching ? "100%" : "100%" }}
           >
             <input
-              style={{ width: !!startSearching ? "100%" : "auto" }}
+              style={{ width: !!startSearching ? "100%" : "100%" }}
               type="text"
               placeholder="Search C2E Titles"
               value={startSearching}
@@ -181,6 +184,7 @@ const Index = () => {
                 if (startSearching?.length && e.key === "Enter") {
                   setallCollection(null);
                   searchCollection();
+                  setApiError("");
                 }
               }}
             />
@@ -190,6 +194,7 @@ const Index = () => {
                   if (startSearching?.length) {
                     setallCollection(null);
                     searchCollection();
+                    setApiError("");
                   }
                 }}
               >
@@ -226,6 +231,36 @@ const Index = () => {
           ) : (
             <Alert variant="warning">No Result found!</Alert>
           )
+        ) : apiError ? (
+          <Alert variant="warning">
+            <div
+              className=""
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <div>
+                <div>
+                  There is an issue with your C2E Player Configuration. Please
+                  contact your LMS Administrator and provide the following
+                  information.
+                </div>
+                {apiError?.details?.message && (
+                  <strong>{apiError?.details?.message?.toUpperCase()}</strong>
+                )}
+                {apiError?.details?.description && (
+                  <div>{apiError?.details?.description}</div>
+                )}
+              </div>
+              <div
+                onClick={() => {
+                  setApiError("");
+                  searchCollection();
+                }}
+                style={{ paddingleft: "30px", cursor: "pointer" }}
+              >
+                X
+              </div>
+            </div>
+          </Alert>
         ) : (
           <Alert variant="primary">Fetching Results ...</Alert>
         )}
