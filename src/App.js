@@ -9,8 +9,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/deeplink" element={<Home />} />
-
+          <Route path="/lti/deeplink" element={<Home />} />
+          <Route path="/lti" element={<Home />} />
           <Route path="/play" element={<Player />} />
+          <Route path="/lti/play" element={<Player />} />
         </Routes>
       </BrowserRouter>
     </div>

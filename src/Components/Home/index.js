@@ -16,11 +16,11 @@ import Arrow from "../../assets/images/arrow.svg";
 import "./style.scss";
 import "./project.scss";
 
-const tokenDummy = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwbGF0Zm9ybVVybCI6Imh0dHBzOi8vY2FudmFzLmluc3RydWN0dXJlLmNvbSIsImNsaWVudElkIjoiMjA4ODMwMDAwMDAwMDAwMTM4IiwiZGVwbG95bWVudElkIjoiMTY0OmE1MTJjY2Y0ZGE4NTFlMzA1MjZmYTJlZWEyZjEyN2I1YjA0MmQ1N2QiLCJwbGF0Zm9ybUNvZGUiOiJsdGlhSFIwY0hNNkx5OWpZVzUyWVhNdWFXNXpkSEoxWTNSMWNtVXVZMjl0TWpBNE9ETXdNREF3TURBd01EQXdNVE00TVRZME9tRTFNVEpqWTJZMFpHRTROVEZsTXpBMU1qWm1ZVEpsWldFeVpqRXlOMkkxWWpBME1tUTFOMlElM0QiLCJjb250ZXh0SWQiOiJodHRwcyUzQSUyRiUyRmNhbnZhcy5pbnN0cnVjdHVyZS5jb20yMDg4MzAwMDAwMDAwMDAxMzgxNjQlM0FhNTEyY2NmNGRhODUxZTMwNTI2ZmEyZWVhMmYxMjdiNWIwNDJkNTdkYTE2NGM4YTMzYzljZmNjODQxM2I4YjA5ZWQ5N2E3MjU0MDhiMDI2OV9ORiIsInVzZXIiOiJjZmZkZTQ2ZC04NjlmLTQzMmEtODVkNC1jNmFmZDVhZmE5MmIiLCJzIjoiNTY4NjRmOTU3NTc3MjBhNzNmMGQ2YjU3NWJiMTQ4MDBjNGVmOTk3OThmYTcxOWE4MjIiLCJpYXQiOjE3MDIzOTk4OTB9.bzzSIxwoNHy0PH-tQ6Yank7ER4796BiFPzpw39JMLBc`;
+const tokenDummy = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwbGF0Zm9ybVVybCI6Imh0dHBzOi8vY2FudmFzLmluc3RydWN0dXJlLmNvbSIsImNsaWVudElkIjoiMjA4ODMwMDAwMDAwMDAwMTM4IiwiZGVwbG95bWVudElkIjoiMTgwOmE1MTJjY2Y0ZGE4NTFlMzA1MjZmYTJlZWEyZjEyN2I1YjA0MmQ1N2QiLCJwbGF0Zm9ybUNvZGUiOiJsdGlhSFIwY0hNNkx5OWpZVzUyWVhNdWFXNXpkSEoxWTNSMWNtVXVZMjl0TWpBNE9ETXdNREF3TURBd01EQXdNVE00TVRnd09tRTFNVEpqWTJZMFpHRTROVEZsTXpBMU1qWm1ZVEpsWldFeVpqRXlOMkkxWWpBME1tUTFOMlElM0QiLCJjb250ZXh0SWQiOiJodHRwcyUzQSUyRiUyRmNhbnZhcy5pbnN0cnVjdHVyZS5jb20yMDg4MzAwMDAwMDAwMDAxMzgxODAlM0FhNTEyY2NmNGRhODUxZTMwNTI2ZmEyZWVhMmYxMjdiNWIwNDJkNTdkYTE2NGM4YTMzYzljZmNjODQxM2I4YjA5ZWQ5N2E3MjU0MDhiMDI2OV9ORiIsInVzZXIiOiJjZmZkZTQ2ZC04NjlmLTQzMmEtODVkNC1jNmFmZDVhZmE5MmIiLCJzIjoiZGQyMTNkOWFlMTJkMDc3Njc3YTgxNzExMTE5MTA2NzU5OWZhYWI4ZDUyNjkxY2MzNTIiLCJpYXQiOjE3MDMwNjg4MzJ9.e-gPVoikgZtsax2gOM2_N5Tzamm1-5TkoDc1jUpjIgk`;
 
 function findNodeByName(root, name) {
   let queue = [root];
-
+  console.log(queue);
   while (queue.length > 0) {
     let current = queue.shift();
 
@@ -123,15 +123,43 @@ const Index = () => {
 
     for (const row of data) {
       let parent = null;
+
       for (const crumb of row.breadcrumb.itemListElement) {
         let newNode = null;
-        const existingNode = findNodeByName(tree, crumb.item.name); // Try to find self in tree
+        let result;
+        if (crumb.position === 0) {
+          result = row.breadcrumb.itemListElement[crumb.position]?.item?.name;
+        } else if (crumb.position === 1) {
+          result =
+            row.breadcrumb.itemListElement[crumb.position]?.item?.name +
+            row.breadcrumb.itemListElement[crumb.position - 1]?.item?.name;
+        } else if (crumb.position === 2) {
+          result =
+            row.breadcrumb.itemListElement[crumb.position]?.item?.name +
+            row.breadcrumb.itemListElement[crumb.position - 1]?.item?.name +
+            row.breadcrumb.itemListElement[crumb.position - 2]?.item?.name;
+        } else if (crumb.position === 3) {
+          result =
+            row.breadcrumb.itemListElement[crumb.position]?.item?.name +
+            row.breadcrumb.itemListElement[crumb.position - 1]?.item?.name +
+            row.breadcrumb.itemListElement[crumb.position - 2]?.item?.name +
+            row.breadcrumb.itemListElement[crumb.position - 3]?.item?.name;
+        } else if (crumb.position === 4) {
+          result =
+            row.breadcrumb.itemListElement[crumb.position]?.item?.name +
+            row.breadcrumb.itemListElement[crumb.position - 1]?.item?.name +
+            row.breadcrumb.itemListElement[crumb.position - 2]?.item?.name +
+            row.breadcrumb.itemListElement[crumb.position - 3]?.item?.name +
+            row.breadcrumb.itemListElement[crumb.position - 4]?.item?.name;
+        }
+        const existingNode = findNodeByName(tree, result); // Try to find self in tree
+
         if (existingNode) {
           newNode = existingNode; // no need to push anything
         } else {
           newNode = {
-            name: crumb.item.name,
-
+            name: result,
+            originalName: crumb.item.name,
             children: [],
           };
           if (parent) {
@@ -148,9 +176,10 @@ const Index = () => {
         description: row?.description,
         children: [],
       };
+
       parent.children.push(leaf); // Finally, insert the leaf node
     }
-    console.log("Final Tree: ", tree);
+    console.log("Final Tree: ", sortJsonByName(tree));
     setAlldata(sortJsonByName(tree));
   };
 
@@ -241,8 +270,9 @@ const Index = () => {
                 <div>
                   There is an issue with your C2E Player Configuration. Please
                   contact your LMS Administrator and provide the following
-                  information.
+                  information:
                 </div>
+                <br />
                 {apiError?.details?.message && (
                   <strong>{apiError?.details?.message?.toUpperCase()}</strong>
                 )}
@@ -250,7 +280,7 @@ const Index = () => {
                   <div>{apiError?.details?.description}</div>
                 )}
               </div>
-              <div
+              {/* <div
                 onClick={() => {
                   setApiError("");
                   searchCollection();
@@ -258,7 +288,7 @@ const Index = () => {
                 style={{ paddingleft: "30px", cursor: "pointer" }}
               >
                 X
-              </div>
+              </div> */}
             </div>
           </Alert>
         ) : (
@@ -324,7 +354,7 @@ const F = ({
                         }}
                         className={"content_heading view_content_heading"}
                       >
-                        {data?.name}
+                        {data?.originalName || data?.name}
                       </h3>
                       {meta ? (
                         <>
@@ -388,8 +418,12 @@ const F = ({
                                             title: meta?.title,
                                           }),
                                         };
+                                        const url1 = new URL(
+                                          process.env.REACT_APP_API_DOMAIN_URL +
+                                            process.env.REACT_APP_DEEPLINK_URL
+                                        );
 
-                                        fetch("/deeplink", requestOptions)
+                                        fetch(url1, requestOptions)
                                           .then((response) => response.text())
                                           .then((form) => {
                                             document
