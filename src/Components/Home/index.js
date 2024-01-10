@@ -16,7 +16,7 @@ import Arrow from "../../assets/images/arrow.svg";
 import "./style.scss";
 import "./project.scss";
 
-const tokenDummy = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwbGF0Zm9ybVVybCI6Imh0dHBzOi8vY2FudmFzLmluc3RydWN0dXJlLmNvbSIsImNsaWVudElkIjoiMjA4ODMwMDAwMDAwMDAwMTM4IiwiZGVwbG95bWVudElkIjoiMTgwOmE1MTJjY2Y0ZGE4NTFlMzA1MjZmYTJlZWEyZjEyN2I1YjA0MmQ1N2QiLCJwbGF0Zm9ybUNvZGUiOiJsdGlhSFIwY0hNNkx5OWpZVzUyWVhNdWFXNXpkSEoxWTNSMWNtVXVZMjl0TWpBNE9ETXdNREF3TURBd01EQXdNVE00TVRnd09tRTFNVEpqWTJZMFpHRTROVEZsTXpBMU1qWm1ZVEpsWldFeVpqRXlOMkkxWWpBME1tUTFOMlElM0QiLCJjb250ZXh0SWQiOiJodHRwcyUzQSUyRiUyRmNhbnZhcy5pbnN0cnVjdHVyZS5jb20yMDg4MzAwMDAwMDAwMDAxMzgxODAlM0FhNTEyY2NmNGRhODUxZTMwNTI2ZmEyZWVhMmYxMjdiNWIwNDJkNTdkYTE2NGM4YTMzYzljZmNjODQxM2I4YjA5ZWQ5N2E3MjU0MDhiMDI2OV9ORiIsInVzZXIiOiJjZmZkZTQ2ZC04NjlmLTQzMmEtODVkNC1jNmFmZDVhZmE5MmIiLCJzIjoiZGQyMTNkOWFlMTJkMDc3Njc3YTgxNzExMTE5MTA2NzU5OWZhYWI4ZDUyNjkxY2MzNTIiLCJpYXQiOjE3MDMwNjg4MzJ9.e-gPVoikgZtsax2gOM2_N5Tzamm1-5TkoDc1jUpjIgk`;
+const tokenDummy = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwbGF0Zm9ybVVybCI6Imh0dHBzOi8vY2FudmFzLmluc3RydWN0dXJlLmNvbSIsImNsaWVudElkIjoiMjA4ODMwMDAwMDAwMDAwMTM4IiwiZGVwbG95bWVudElkIjoiMTgwOmE1MTJjY2Y0ZGE4NTFlMzA1MjZmYTJlZWEyZjEyN2I1YjA0MmQ1N2QiLCJwbGF0Zm9ybUNvZGUiOiJsdGlhSFIwY0hNNkx5OWpZVzUyWVhNdWFXNXpkSEoxWTNSMWNtVXVZMjl0TWpBNE9ETXdNREF3TURBd01EQXdNVE00TVRnd09tRTFNVEpqWTJZMFpHRTROVEZsTXpBMU1qWm1ZVEpsWldFeVpqRXlOMkkxWWpBME1tUTFOMlElM0QiLCJjb250ZXh0SWQiOiJodHRwcyUzQSUyRiUyRmNhbnZhcy5pbnN0cnVjdHVyZS5jb20yMDg4MzAwMDAwMDAwMDAxMzgxODAlM0FhNTEyY2NmNGRhODUxZTMwNTI2ZmEyZWVhMmYxMjdiNWIwNDJkNTdkYTE2NGM4YTMzYzljZmNjODQxM2I4YjA5ZWQ5N2E3MjU0MDhiMDI2OV9ORiIsInVzZXIiOiJjZmZkZTQ2ZC04NjlmLTQzMmEtODVkNC1jNmFmZDVhZmE5MmIiLCJzIjoiMThmYzY4MDQyMjYzMDQ5NjFmOTE0OTU4ODc0MWUxNGU4YjgyNWQ5N2RkN2U4Y2U0N2EiLCJpYXQiOjE3MDQyMDY3NTl9.iWHL5JTMd1vZTYqZHbq5CT5uZaUw9cH5wPngLLuedY8`;
 
 function findNodeByName(root, name) {
   let queue = [root];
@@ -320,9 +320,11 @@ const F = ({
   showdetail,
   setSelectedC2e,
 }) => {
-  const meta = allDataRaw?.filter((row) => row.title === data.name)?.[0];
+  const meta = allDataRaw?.filter(
+    (row) => row.title === data.name && row.description === data.description
+  )?.[0];
   const [activeArrow, setactiveArrow] = useState([]);
-
+  console.log(data);
   return (
     <div className="tab-content book-accordion">
       <Accordion className="book-acc">
@@ -360,7 +362,23 @@ const F = ({
                         <>
                           <div className="content-pdf-box">
                             <div className="flexer chapter_flexer">
-                              <p className="cotent-text">
+                              <div className="breadcrum-design">
+                                {meta.breadcrumb?.itemListElement?.map(
+                                  (data, counter) => {
+                                    if (counter === 0) return;
+                                    return (
+                                      <div>
+                                        {data?.item?.name}
+                                        {counter <
+                                          meta.breadcrumb?.itemListElement
+                                            .length -
+                                            1 && <span>&gt;</span>}
+                                      </div>
+                                    );
+                                  }
+                                )}
+                              </div>
+                              {/* <p className="cotent-text">
                                 <strong className="author_para">
                                   author:&nbsp;
                                 </strong>
@@ -371,7 +389,7 @@ const F = ({
                                   license Email:&nbsp;
                                 </strong>
                                 {meta?.licenseemail}
-                              </p>
+                              </p> */}
                             </div>
 
                             <div className="contentbox dropdown_contentbox_btns">
@@ -520,8 +538,4 @@ function sortJsonByName(obj) {
   }
 
   return obj;
-}
-
-function sortSearch(obj) {
-  return obj.sort((a, b) => a.title.localeCompare(b.title));
 }

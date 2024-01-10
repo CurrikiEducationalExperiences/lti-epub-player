@@ -156,7 +156,7 @@
       }
       .contentbox {
         margin-top: 0;
-        width: 100%;
+
         display: flex;
         justify-content: space-between;
         overflow: visible;
@@ -574,6 +574,7 @@
       align-items: flex-start;
       flex-direction: column;
       gap: 0px;
+
       .cotent-text {
         display: flex;
         gap: 3px;
@@ -781,5 +782,72 @@
   .modal-dialog {
     max-width: 800px !important;
     margin: 1.75rem auto !important;
+  }
+}
+
+.breadcrum-design {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  font-size: 14px;
+  align-items: center;
+  span {
+    padding: 0 5px;
+  }
+}
+
+.footer-copyright {
+  margin: 0 auto;
+  padding: 10px 10px;
+  text-align: center;
+  font-size: 14px;
+  border-top: 1px solid #ccc;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 11111;
+  background: #fff;
+  span {
+    color: #2e68bf;
+    cursor: pointer;
+  }
+}
+
+.copyright-data {
+  font-family: Arial, sans-serif;
+  color: #333; /* Adjust the color as needed */
+  font-size: 14px;
+  max-height: 600px;
+  overflow-y: auto;
+
+  .copyright-text-title {
+    font-weight: bold;
+    font-size: 16px; /* Adjust the font size as needed */
+    margin-bottom: 5px;
+  }
+
+  .copyright-text {
+    margin-bottom: 10px;
+
+    &.zcheltbold {
+      font-weight: bold;
+    }
+
+    a {
+      color: blue; /* Adjust the link color as needed */
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .copyright-disclaimer-box {
+    border: 1px solid #ccc; /* Border styling */
+    padding: 10px;
+    margin-bottom: 15px;
+
+    /* Other styles for the disclaimer box */
   }
 }
