@@ -22,7 +22,7 @@ const ownStyles = {
   },
 };
 
-const tokenDummy = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwbGF0Zm9ybVVybCI6Imh0dHBzOi8vY2FudmFzLmluc3RydWN0dXJlLmNvbSIsImNsaWVudElkIjoiMjA4ODMwMDAwMDAwMDAwMTM4IiwiZGVwbG95bWVudElkIjoiMTgwOmE1MTJjY2Y0ZGE4NTFlMzA1MjZmYTJlZWEyZjEyN2I1YjA0MmQ1N2QiLCJwbGF0Zm9ybUNvZGUiOiJsdGlhSFIwY0hNNkx5OWpZVzUyWVhNdWFXNXpkSEoxWTNSMWNtVXVZMjl0TWpBNE9ETXdNREF3TURBd01EQXdNVE00TVRnd09tRTFNVEpqWTJZMFpHRTROVEZsTXpBMU1qWm1ZVEpsWldFeVpqRXlOMkkxWWpBME1tUTFOMlElM0QiLCJjb250ZXh0SWQiOiJodHRwcyUzQSUyRiUyRmNhbnZhcy5pbnN0cnVjdHVyZS5jb20yMDg4MzAwMDAwMDAwMDAxMzgxODAlM0FhNTEyY2NmNGRhODUxZTMwNTI2ZmEyZWVhMmYxMjdiNWIwNDJkNTdkYTE2NGM4YTMzYzljZmNjODQxM2I4YjA5ZWQ5N2E3MjU0MDhiMDI2OV9ORiIsInVzZXIiOiJjZmZkZTQ2ZC04NjlmLTQzMmEtODVkNC1jNmFmZDVhZmE5MmIiLCJzIjoiMThmYzY4MDQyMjYzMDQ5NjFmOTE0OTU4ODc0MWUxNGU4YjgyNWQ5N2RkN2U4Y2U0N2EiLCJpYXQiOjE3MDQyMDY3NTl9.iWHL5JTMd1vZTYqZHbq5CT5uZaUw9cH5wPngLLuedY8`;
+const tokenDummy = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwbGF0Zm9ybVVybCI6Imh0dHBzOi8vY2FudmFzLmluc3RydWN0dXJlLmNvbSIsImNsaWVudElkIjoiMjA4ODMwMDAwMDAwMDAwMTM4IiwiZGVwbG95bWVudElkIjoiMTgwOmE1MTJjY2Y0ZGE4NTFlMzA1MjZmYTJlZWEyZjEyN2I1YjA0MmQ1N2QiLCJwbGF0Zm9ybUNvZGUiOiJsdGlhSFIwY0hNNkx5OWpZVzUyWVhNdWFXNXpkSEoxWTNSMWNtVXVZMjl0TWpBNE9ETXdNREF3TURBd01EQXdNVE00TVRnd09tRTFNVEpqWTJZMFpHRTROVEZsTXpBMU1qWm1ZVEpsWldFeVpqRXlOMkkxWWpBME1tUTFOMlElM0QiLCJjb250ZXh0SWQiOiJodHRwcyUzQSUyRiUyRmNhbnZhcy5pbnN0cnVjdHVyZS5jb20yMDg4MzAwMDAwMDAwMDAxMzgxODAlM0FhNTEyY2NmNGRhODUxZTMwNTI2ZmEyZWVhMmYxMjdiNWIwNDJkNTdkYTE2NGM4YTMzYzljZmNjODQxM2I4YjA5ZWQ5N2E3MjU0MDhiMDI2OV9ORiIsInVzZXIiOiJjZmZkZTQ2ZC04NjlmLTQzMmEtODVkNC1jNmFmZDVhZmE5MmIiLCJzIjoiZWRjOWUwNjY1NDMxMTdiMzU0NzhhN2JhMWYwYmI2ZmFkYjE4NTgzNGJkZjhmNDJlY2QiLCJpYXQiOjE3MDQ4ODc1NjZ9.AYhjI5axoZlWnQJkhG2gXJyjgF5Cg2NjxhAwtZL0ZAM`;
 
 const Epub = ({ previewId }) => {
   const [show, setShow] = useState(false);
@@ -40,7 +40,7 @@ const Epub = ({ previewId }) => {
   const [location, setLocation] = useState(null);
   const renditionRef = useRef(null);
   const tocRef = useRef(null);
-  console.log(c2eResource);
+
   const locationChanged = (epubcifi) => {
     // epubcifi is a internal string used by epubjs to point to a location in an epub. It looks like this: epubcfi(/6/6[titlepage]!/4/2/12[pgepubid00003]/3:0)
     if (renditionRef.current && tocRef.current) {
@@ -120,6 +120,18 @@ const Epub = ({ previewId }) => {
       setAllFIles(contents);
     }
   }, [JSlipParser]);
+
+  useEffect(() => {
+    if (activeC2E) {
+      setTimeout(() => {
+        document
+          .getElementById("copyrightNotice")
+          ?.addEventListener("click", () => {
+            handleShow();
+          });
+      }, 1000);
+    }
+  }, [activeC2E]);
 
   useEffect(() => {
     (async () => {
@@ -352,9 +364,15 @@ const Epub = ({ previewId }) => {
       </div>
       {activeC2E && (
         <div className="footer-copyright">
-          From {activeC2E?.c2eMetadata?.subjectOf?.name},{" "}
+          {/* From {activeC2E?.c2eMetadata?.subjectOf?.name},{" "}
           <span onClick={handleShow}>Copyright Notice</span>. Used by permission
           of John Wiley & Sons, Inc.
+          {activeC2E?.c2eMetadata?.copyright?.copyrightFooter} */}
+          <div
+            dangerouslySetInnerHTML={{
+              __html: activeC2E?.c2eMetadata?.copyright?.copyrightFooter,
+            }}
+          />
         </div>
       )}
       <Modal
@@ -369,110 +387,11 @@ const Epub = ({ previewId }) => {
         </Modal.Header>
         <Modal.Body>
           <div className="copyright-data">
-            <p class="copyright-text-title">
-              Medical Dosage Calculations<sup>®</sup>
-            </p>
-            <p class="copyright-text">
-              Published by
-              <br />
-              <span class="zcheltbold">Wiley Publishing, Inc.</span>
-              <br />
-              111 River St.
-              <br />
-              Hoboken, NJ 07030-5774
-              <br />
-              <a href="http://www.wiley.com">www.wiley.com</a>
-            </p>
-            <p class="copyright-text">
-              Copyright © 2011 by Wiley Publishing, Inc., Indianapolis, Indiana
-            </p>
-            <p class="copyright-text">Published simultaneously in Canada</p>
-            <p class="copyright-text">
-              No part of this publication may be reproduced, stored in a
-              retrieval system, or transmitted in any form or by any means,
-              electronic, mechanical, photocopying, recording, scanning, or
-              otherwise, except as permitted under Sections 107 or 108 of the
-              1976 United States Copyright Act, without either the prior written
-              permission of the Publisher, or authorization through payment of
-              the appropriate per-copy fee to the Copyright Clearance Center,
-              222 Rosewood Drive, Danvers, MA 01923, 978-750-8400, fax
-              978-646-8600. Requests to the Publisher for permission should be
-              addressed to the Permissions Department, John Wiley &amp; Sons,
-              Inc., 111 River Street, Hoboken, NJ 07030, (201) 748-6011, fa I
-              will not close if you click outside me. Do not even try to press
-              escape key.x (201) 748-6008, or online at{" "}
-              <a href="http://www.wiley.com/go/permissions">
-                http://www.wiley.com/go/permissions
-              </a>
-              .
-            </p>
-            <p class="copyright-text">
-              <span class="zcheltbold">Trademarks:</span> Wiley, the Wiley
-              Publishing logo, For Dummies, the Dummies Man logo, A Reference
-              for the Rest of Us!, The Dummies Way, Dummies Daily, The Fun and
-              Easy Way, Dummies.com, Making Everything Easier!, and related
-              trade dress are trademarks or registered trademarks of John Wiley
-              &amp; Sons, Inc. and/or its affiliates in the United States and
-              other countries, and may not be used without written permission.
-              All other trademarks are the property of their respective owners.
-              Wiley Publishing, Inc., is not associated with any product or
-              vendor mentioned in this book.
-            </p>
-            <p class="copyright-disclaimer-box">
-              Limit of Liability/Disclaimer of Warranty: The contents of this
-              work are intended to further general scientific research,
-              understanding, and discussion only and are not intended and should
-              not be relied upon as recommending or promoting a specific method,
-              diagnosis, or treatment by physicians for any particular patient.
-              The publisher and the author make no representations or warranties
-              with respect to the accuracy or completeness of the contents of
-              this work and specifically disclaim all warranties, including
-              without limitation any implied warranties of fitness for a
-              particular purpose. In view of ongoing research, equipment
-              modifications, changes in governmental regulations, and the
-              constant flow of information relating to the use of medicines,
-              equipment, and devices, the reader is urged to review and evaluate
-              the information provided in the package insert or instructions for
-              each medicine, equipment, or device for, among other things, any
-              changes in the instructions or indication of usage and for added
-              warnings and precautions. Readers should consult with a specialist
-              where appropriate. The fact that an organization or Website is
-              referred to in this work as a citation and/or a potential source
-              of further information does not mean that the author or the
-              publisher endorses the information the organization or Website may
-              provide or recommendations it may make. Further, readers should be
-              aware that Internet Websites listed in this work may have changed
-              or disappeared between when this work was written and when it is
-              read. No warranty may be created or extended by any promotional
-              statements for this work. Neither the publisher nor the author
-              shall be liable for any damages arising herefrom.
-            </p>
-            <p class="copyright-text">
-              For general information on our other products and services, please
-              contact our Customer Care Department within the U.S. at
-              877-762-2974, outside the U.S. at 317-572-3993, or fax
-              317-572-4002.
-            </p>
-            <p class="copyright-text">
-              For technical support, please visit{" "}
-              <a href="http://www.wiley.com/techsupport">
-                www.wiley.com/techsupport
-              </a>
-              .
-            </p>
-            <p class="copyright-text">
-              Wiley also publishes its books in a variety of electronic formats.
-              Some content that appears in print may not be available in
-              electronic books.
-            </p>
-            <p class="copyright-text">
-              Library of Congress Control Number: 2011924132
-            </p>
-            <p class="copyright-text">ISBN: 978-0-470-93064-9</p>
-            <p class="copyright-text">
-              Manufactured in the United States of America
-            </p>
-            <p class="copyright-text">10 9 8 7 6 5 4 3 2 1</p>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: activeC2E?.c2eMetadata?.copyright?.copyrightNotice,
+              }}
+            />
           </div>
         </Modal.Body>
       </Modal>

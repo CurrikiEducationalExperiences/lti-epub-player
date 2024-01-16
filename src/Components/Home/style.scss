@@ -815,39 +815,38 @@
 
 .copyright-data {
   font-family: Arial, sans-serif;
-  color: #333; /* Adjust the color as needed */
-  font-size: 14px;
-  max-height: 600px;
-  overflow-y: auto;
+  color: #333; /* Adjust color as needed */
 
-  .copyright-text-title {
+  max-height: 600px;
+  overflow: auto;
+
+  .Copyright-Text-Title {
+    font-size: 18px; /* Adjust font size as needed */
     font-weight: bold;
-    font-size: 16px; /* Adjust the font size as needed */
-    margin-bottom: 5px;
   }
 
-  .copyright-text {
-    margin-bottom: 10px;
-
-    &.zcheltbold {
-      font-weight: bold;
-    }
-
-    a {
-      color: blue; /* Adjust the link color as needed */
+  .Copyright-Text {
+    font-size: 14px; /* Adjust font size as needed */
+    padding-bottom: 10px;
+    a,
+    code {
+      color: blue; /* Adjust link color as needed */
       text-decoration: none;
 
       &:hover {
         text-decoration: underline;
       }
     }
+
+    .Code-within-text {
+      font-family: monospace;
+      /* Additional styling for code within text if needed */
+    }
   }
 
-  .copyright-disclaimer-box {
-    border: 1px solid #ccc; /* Border styling */
-    padding: 10px;
-    margin-bottom: 15px;
-
-    /* Other styles for the disclaimer box */
+  .Copyright-Disclaimer-Box {
+    font-size: 12px; /* Adjust font size as needed */
+    color: #777; /* Adjust color as needed */
+    margin-top: 10px; /* Adjust spacing as needed */
   }
 }
